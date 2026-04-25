@@ -1,0 +1,583 @@
+{% extends "base_v3.html" %}
+
+{% block title %}Mon Profil{% endblock %}
+{% block page_title %}Mon Profil{% endblock %}
+
+{% block content %}
+<div class="pro-profile-container">
+    <div class="profile-header-pro">
+        <div class="profile-cover" {% if user.banner_image
+            %}style="background-image: url('{{ user.banner_image }}'); background-size: cover; background-position: center;"
+            {% endif %}>
+            <button class="change-banner-btn" onclick="document.getElementById('banner-input').click()"
+                title="Changer la bannière">
+                📷 Changer la bannière
+            </button>
+        </div>
+        <div class="profile-info-main">
+            <div class="profile-avatar-wrapper">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture }}" alt="Photo de profil" class="profile-avatar-image"
+                    id="profile-avatar-img">
+                {% else %}
+                <div class="profile-avatar-large" id="profile-avatar-initials">{{ user.firstname[0] }}{{
+                    user.lastname[0] }}</div>
+                {% endif %}
+                <button class="change-avatar-btn" onclick="document.getElementById('profile-picture-input').click()"
+                    title="Changer la photo">
+                    📷
+                </button>
+            </div>
+            <div class="profile-meta-header">
+                <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+                <p>{{ user.profession or "Votre profession" }} • Membre Premium</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="profile-picture-input" hidden accept="image/*">
+    <input type="file" id="banner-input" hidden accept="image/*">
+
+    <div class="pro-grid-profile">
+        <!-- Main Form -->
+        <div class="pro-card profile-card-main">
+            <div class="card-head">
+                <h3>Informations Personnelles</h3>
+            </div>
+            <form id="profile-form" class="pro-form">
+                <div class="form-row-pro">
+                    <div class="form-group-pro">
+                        <label for="firstname">Prénom</label>
+                        <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}"
+                            placeholder="Votre prénom" required>
+                    </div>
+                    <div class="form-group-pro">
+                        <label for="lastname">Nom</label>
+                        <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}"
+                            placeholder="Votre nom" required>
+                    </div>
+                </div>
+
+                <div class="form-group-pro">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="votre@email.com"
+                        required>
+                </div>
+
+                <div class="form-group-pro">
+                    <label for="profession">Profession / Poste actuel</label>
+                    <input type="text" id="profession" name="profession" value="{{ user.profession or '' }}"
+                        placeholder="Ex: Développeur Fullstack">
+                </div>
+
+                <div class="form-group-pro">
+                    <label for="bio">📍 Objectif Professionnel</label>
+                    <textarea id="bio" name="bio" rows="3" placeholder="Décrivez votre objectif en quelques lignes..."
+                        style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-primary); font-family: inherit;">{{ user.bio or '' }}</textarea>
+                </div>
+
+                <div class="form-group-pro">
+                    <label for="achievements">🏆 Réalisations Clés</label>
+                    <textarea id="achievements" name="achievements" rows="3" placeholder="Listez vos succès majeurs..."
+                        style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-primary); font-family: inherit;">{{ user.achievements or '' }}</textarea>
+                </div>
+
+                <div class="form-group-pro">
+                    <label for="skills">🔑 Compétences Techniques</label>
+                    <input type="text" id="skills" name="skills" value="{{ user.skills or '' }}"
+                        placeholder="Ex: Python, React, AWS, Docker">
+                </div>
+
+                <div class="form-divider"></div>
+
+                <div class="form-group-pro">
+                    <label for="new_password">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+                    <input type="password" id="new_password" name="new_password" placeholder="••••••••">
+                </div>
+
+                <div class="form-actions-pro">
+                    <button type="submit" class="pro-cta-btn" id="save-profile-btn">Enregistrer les
+                        modifications</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar Stats/Info -->
+        <div class="profile-side-content">
+            <div class="pro-card stats-mini-card">
+                <div class="stat-item">
+                    <span class="stat-label">Analyses réalisées</span>
+                    <span class="stat-value">{{ analyses_count }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Score Moyen</span>
+                    <span class="stat-value">{% set total_score = 0 %}{% for a in recent_analyses %}{% set total_score =
+                        total_score + a.final_score %}{% endfor %}{% if recent_analyses %}{{ (total_score /
+                        recent_analyses|length)|round(1) }}{% else %}0{% endif %}%</span>
+                </div>
+            </div>
+
+            <div class="pro-card account-status-card">
+                <h3>Statut du Compte</h3>
+                <div class="status-badge-premium">💎 Premium Actif</div>
+                <p class="status-info">Inscrit depuis le {{ user.created_at.strftime('%d/%m/%Y') }}</p>
+                <div class="account-actions">
+                    <a href="/subscriptions" class="btn-link">Gérer mon abonnement</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Temporary profile styles to be moved to style.css if needed */
+    .pro-profile-container {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .profile-header-pro {
+        background: var(--bg-secondary);
+        border-radius: 24px;
+        overflow: hidden;
+        margin-bottom: 24px;
+        border: 1px solid var(--border);
+    }
+
+    .profile-cover {
+        height: 120px;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    }
+
+    .profile-info-main {
+        display: flex;
+        align-items: flex-end;
+        gap: 24px;
+        padding: 0 32px 32px;
+        margin-top: -40px;
+    }
+
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-avatar-large,
+    .profile-avatar-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 30px;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #f97316 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 800;
+        border: 8px solid var(--bg-secondary);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .profile-avatar-image {
+        object-fit: cover;
+        background: transparent;
+    }
+
+    .change-avatar-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        border: 3px solid var(--bg-secondary);
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        box-shadow: var(--shadow-md);
+    }
+
+    .change-avatar-btn:hover {
+        transform: scale(1.1);
+        background: #5558d9;
+    }
+
+    .change-banner-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 8px 16px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+        box-shadow: var(--shadow-md);
+    }
+
+    .change-banner-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .profile-cover {
+        position: relative;
+    }
+
+    .profile-meta-header h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 4px;
+        color: var(--text-primary);
+    }
+
+    .profile-meta-header p {
+        color: var(--text-muted);
+        font-size: 16px;
+    }
+
+    .pro-grid-profile {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .form-row-pro {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group-pro {
+        margin-bottom: 20px;
+    }
+
+    .form-group-pro label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .form-group-pro input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-family: inherit;
+        transition: all 0.2s;
+    }
+
+    .dark-mode .form-group-pro input {
+        background: #0f172a;
+    }
+
+    .form-group-pro input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        outline: none;
+    }
+
+    .form-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 24px 0;
+    }
+
+    .form-actions-pro {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 32px;
+    }
+
+    .stats-mini-card {
+        display: flex;
+        justify-content: space-around;
+        padding: 20px;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .profile-side-content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .pro-card {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 18px;
+        box-shadow: none;
+    }
+
+    .profile-card-main {
+        min-height: 320px;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .status-badge-premium {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary);
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-weight: 700;
+        display: inline-block;
+        margin: 16px 0;
+    }
+
+    .btn-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .btn-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 1100px) {
+        .pro-grid-profile {
+            grid-template-columns: 1fr 320px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .pro-grid-profile {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-info-main {
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+        }
+
+        .profile-avatar-wrapper {
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-avatar-large,
+        .profile-avatar-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            font-size: 36px;
+        }
+    }
+</style>
+
+<script>
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('save-profile-btn');
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Enregistrement...";
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                showToast("Profil mis à jour avec succès !", "success");
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast(result.error || "Erreur lors de la mise à jour", "error");
+            }
+        } catch (err) {
+            showToast("Erreur de communication avec le serveur", "error");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    });
+
+    function showToast(message, type = 'success') {
+        // Check if toast container exists
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Upload Profile Picture (preview immediately, then upload)
+    document.getElementById('profile-picture-input').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('Image trop volumineuse (max 5MB)', 'error');
+            return;
+        }
+
+        // Immediate preview
+        const avatarWrapper = document.querySelector('.profile-avatar-wrapper');
+        const existing = avatarWrapper ? avatarWrapper.querySelector('.profile-avatar-image') : null;
+        const previewUrl = URL.createObjectURL(file);
+
+        if (avatarWrapper) {
+            if (existing) {
+                existing.src = previewUrl;
+            } else {
+                const initials = avatarWrapper.querySelector('.profile-avatar-large');
+                if (initials) {
+                    const img = document.createElement('img');
+                    img.src = previewUrl;
+                    img.alt = 'Photo de profil';
+                    img.className = 'profile-avatar-image';
+                    img.id = 'profile-avatar-img';
+                    initials.replaceWith(img);
+                }
+            }
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            showToast('Upload en cours...', 'info');
+            console.log('Uploading profile picture...');
+
+            const response = await fetch('/api/upload-profile-picture', {
+                method: 'POST',
+                body: formData
+            });
+
+            console.log('Response status:', response.status);
+
+            const result = await response.json();
+            console.log('Response result:', result);
+
+            if (response.ok) {
+                showToast('Photo de profil mise à jour !', 'success');
+                // Use server URL (with cache-buster)
+                const finalUrl = result.profile_picture + '?t=' + new Date().getTime();
+                const imgEl = document.querySelector('.profile-avatar-image');
+                if (imgEl) imgEl.src = finalUrl;
+                // Release preview object URL
+                URL.revokeObjectURL(previewUrl);
+            } else {
+                showToast(result.error || 'Erreur lors de l\'upload', 'error');
+            }
+        } catch (err) {
+            console.error('Upload error:', err);
+            showToast('Erreur de communication: ' + err.message, 'error');
+        }
+
+        // Reset input
+        e.target.value = '';
+    });
+
+    // Upload Banner Image (preview immediately, then upload)
+    document.getElementById('banner-input').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('Image trop volumineuse (max 5MB)', 'error');
+            return;
+        }
+
+        // Immediate preview for banner
+        const banner = document.querySelector('.profile-cover');
+        const previewUrl = URL.createObjectURL(file);
+        if (banner) {
+            banner.style.backgroundImage = `url('${previewUrl}')`;
+            banner.style.backgroundSize = 'cover';
+            banner.style.backgroundPosition = 'center';
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            showToast('Upload en cours...', 'info');
+            console.log('Uploading banner image...');
+
+            const response = await fetch('/api/upload-banner-image', {
+                method: 'POST',
+                body: formData
+            });
+
+            console.log('Response status:', response.status);
+
+            const result = await response.json();
+            console.log('Response result:', result);
+
+            if (response.ok) {
+                showToast('Bannière mise à jour !', 'success');
+                const finalUrl = result.banner_image + '?t=' + new Date().getTime();
+                if (banner) banner.style.backgroundImage = `url('${finalUrl}')`;
+                // Release preview object URL
+                URL.revokeObjectURL(previewUrl);
+            } else {
+                showToast(result.error || 'Erreur lors de l\'upload', 'error');
+            }
+        } catch (err) {
+            console.error('Upload error:', err);
+            showToast('Erreur de communication: ' + err.message, 'error');
+        }
+
+        // Reset input
+        e.target.value = '';
+    });
+</script>
+{% endblock %}

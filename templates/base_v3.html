@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JobMatch{% endblock %} - Console v3.0</title>
+    <script>
+        // Apply Theme immediately
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark-mode');
+        }
+        // Apply Accent Color immediately
+        const savedColor = localStorage.getItem('accentColor');
+        if (savedColor) {
+            document.documentElement.style.setProperty('--primary', savedColor);
+            document.documentElement.style.setProperty('--primary-dark', savedColor);
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="pro-dashboard-body">
+
+    <div class="pro-layout">
+        <!-- Mobile Menu Toggle (Visible only on mobile) -->
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Fixed Side Navigation -->
+        <aside class="pro-sidebar" id="pro-sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">JM</div>
+                <div class="brand-name">Console v3.0</div>
+            </div>
+
+            <div class="sidebar-scroll">
+                <div class="sidebar-section">
+                    <p class="section-label">Principal</p>
+                    <nav class="side-nav">
+                        <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-label">Tableau de Bord</span>
+                        </a>
+                        <a href="/cv-improver" class="nav-item {% if active_page == 'cv-improver' %}active{% endif %}">
+                            <span class="nav-icon">✨</span>
+                            <span class="nav-label">Optimiseur CV</span>
+                        </a>
+                        <a href="/job-generator"
+                            class="nav-item {% if active_page == 'job-generator' %}active{% endif %}">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-label">Analyseur d'Offres</span>
+                        </a>
+
+                    </nav>
+                </div>
+
+                {% if user and user.is_admin %}
+                <div class="sidebar-section">
+                    <p class="section-label">Administration</p>
+                    <nav class="side-nav">
+                        <a href="/superadmin" class="nav-item {% if active_page == 'superadmin' %}active{% endif %}">
+                            <span class="nav-icon">🛡️</span>
+                            <span class="nav-label">Super Admin</span>
+                        </a>
+                    </nav>
+                </div>
+                {% endif %}
+
+                <div class="sidebar-section">
+                    <p class="section-label">Ma Carrière</p>
+                    <nav class="side-nav">
+                        <a href="/my-offers" class="nav-item {% if active_page == 'my-offers' %}active{% endif %}">
+                            <span class="nav-icon">📂</span>
+                            <span class="nav-label">Mes Candidatures</span>
+                        </a>
+                        <a href="/subscriptions"
+                            class="nav-item {% if active_page == 'subscriptions' %}active{% endif %}">
+                            <span class="nav-icon">💎</span>
+                            <span class="nav-label">Pass Premium</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidebar-section">
+                    <p class="section-label">À PROPOS & ÉQUIPE</p>
+                    <nav class="side-nav">
+                        <a href="/about" class="nav-item {% if active_page == 'about' %}active{% endif %}">
+                            <span class="nav-icon">ℹ️</span>
+                            <span class="nav-label">À Propos</span>
+                        </a>
+                        <a href="/team" class="nav-item {% if active_page == 'team' %}active{% endif %}">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-label">Présentation Équipe</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidebar-section">
+                    <p class="section-label">Configuration</p>
+                    <nav class="side-nav">
+                        <a href="/settings" class="nav-item {% if active_page == 'settings' %}active{% endif %}">
+                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-label">Paramètres</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="sidebar-footer-pro">
+                <div class="user-footer-card">
+                    <div class="user-footer-main">
+                        <div class="user-avatar-pro">
+                            {% if current_user and current_user.profile_picture %}
+                            <img src="{{ current_user.profile_picture }}" alt="Photo de profil"
+                                class="user-avatar-photo">
+                            {% else %}
+                            <i class="fas fa-user-circle"></i>
+                            {% endif %}
+                        </div>
+                        <div class="user-meta-pro">
+                            <span class="user-name-pro">
+                                {% if current_user and current_user.is_authenticated %}
+                                {{ current_user.firstname }} {{ current_user.lastname }}
+                                {% else %}
+                                Alice Dupont
+                                {% endif %}
+                            </span>
+                            <span class="user-status-pro">Connecté • Premium</span>
+                        </div>
+                    </div>
+                    <div class="user-footer-actions">
+                        <a href="/settings" class="user-footer-btn primary" title="Voir mon profil"
+                            style="width: 100%; text-align: center; margin-bottom: 5px;">
+                            Mon Profil
+                        </a>
+                        {% if current_user.is_authenticated %}
+                        <a href="/logout" class="user-footer-btn" title="Se déconnecter"
+                            style="width: 100%; text-align: center; background: rgba(220, 53, 69, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 53, 69, 0.2);">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </a>
+                        {% else %}
+                        <a href="/connexion" class="user-footer-btn" title="Se connecter"
+                            style="width: 100%; text-align: center; background: rgba(40, 167, 69, 0.1); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.2);">
+                            <i class="fas fa-sign-in-alt"></i> Connexion
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Overlay for mobile menu -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Main Content -->
+        <main class="pro-content">
+            <header class="pro-header">
+                <div class="header-left">
+                    <div class="breadcrumb">Console / <strong>{% block page_title %}Page{% endblock %}</strong></div>
+                </div>
+                <div class="header-right">
+                    <div class="search-pro hide-mobile">
+                        <span class="search-ico">🔍</span>
+                        <input type="text" id="header-search" placeholder="Rechercher...">
+                    </div>
+                    <button class="icon-btn-pro" title="Notifications" id="notification-bell">
+                        <span class="icon">🔔</span>
+                        <span class="pro-badge" id="notif-count"></span>
+                    </button>
+                    <button class="icon-btn-pro" title="Changer de thème" id="theme-toggle" onclick="toggleDarkMode()">
+                        <span class="icon" id="theme-icon">🌙</span>
+                    </button>
+                    <!-- Notification Panel (Hidden) -->
+                    <div class="notif-panel-pro" id="notif-panel">
+                        <div class="notif-panel-header">
+                            <h3>Notifications</h3>
+                            <button class="btn-clear-notif" onclick="clearAllNotifs()">Tout marquer comme lu</button>
+                        </div>
+                        <div class="notif-list-pro" id="notif-list">
+                            <!-- JS filled -->
+                        </div>
+                    </div>
+                    <button class="pro-cta-btn hide-mobile" onclick="openAnalyzerV3()">
+                        Nouvelle Analyse
+                    </button>
+                </div>
+            </header>
+
+            <div class="pro-stage">
+                {% block content %}
+                <div class="pro-card">
+                    <p>Contenu à venir...</p>
+                </div>
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-wrapper">
+        <button class="chatbot-fab" id="chatbot-fab" aria-label="Aide intelligente">
+            <span class="fab-icon">🤖</span>
+            <span class="fab-badge">1</span>
+        </button>
+
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <span class="bot-status"></span>
+                    <h3>Intelligence Artificielle</h3>
+                </div>
+                <button class="btn-close-chat" id="close-chat">✕</button>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    Bonjour ! Je suis l'IA JobMatch. Posez-moi vos questions sur votre carrière, votre CV ou le marché
+                    de l'emploi.
+                </div>
+            </div>
+
+            <div class="chat-actions">
+                <button class="chat-chip" onclick="botHelp('analyzer')">🔍 Analyse</button>
+                <button class="chat-chip" onclick="botHelp('trends')">📈 Tendances</button>
+                <button class="chat-chip" onclick="botHelp('profile')">👤 Profil</button>
+                <button class="chat-chip" onclick="botHelp('tips')">💡 Conseils</button>
+            </div>
+
+            <div class="chat-footer">
+                <button id="emoji-btn" class="emoji-btn" title="Ajouter un emoji">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                        <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                        <circle cx="9" cy="9" r="1" fill="currentColor" />
+                        <circle cx="15" cy="9" r="1" fill="currentColor" />
+                    </svg>
+                </button>
+                <input type="text" id="chat-input" placeholder="Demandez-moi n'importe quoi..." autocomplete="off">
+                <button id="send-chat">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Slide-over Analyzer -->
+    <div id="v3-analyzer-overlay" class="pro-overlay">
+        <div class="pro-slide-over">
+            <div class="so-header">
+                <h2>Nouvelle Analyse</h2>
+                <button onclick="closeAnalyzerV3()" class="so-close">✕</button>
+            </div>
+            <div class="so-body">
+                <div class="so-form">
+                    <div class="so-group">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-briefcase" style="color: var(--primary);"></i> Offre d'Emploi
+                            </label>
+                            <button onclick="generateTestJobOfferV3()" class="pro-btn-neon"
+                                style="padding: 6px 12px; font-size: 11px; height: auto; text-transform: none; letter-spacing: 0;"
+                                type="button">
+                                ✨ Démo IA
+                            </button>
+                        </div>
+                        <textarea id="v3-job-text" class="neon-border"
+                            style="border-radius: 12px; background: rgba(0,0,0,0.2); padding: 15px; font-family: inherit; color: white;"
+                            placeholder="Collez le texte de l'offre d'emploi ici..."></textarea>
+                    </div>
+                    <div class="so-group" style="margin-top: 10px;">
+                        <label
+                            style="font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <i class="fas fa-file-pdf" style="color: var(--danger);"></i> Votre CV
+                        </label>
+                        <div class="so-drop" id="v3-drop-zone">
+                            <span class="drop-icon">☁️</span>
+                            <p id="v3-file-text">Glissez votre CV ici</p>
+                            <span class="drop-subtitle"
+                                style="font-size: 11px; color: var(--text-muted); margin-top: -8px;">ou cliquez pour
+                                parcourir (PDF)</span>
+                            <input type="file" id="v3-pdf-file" hidden accept="application/pdf">
+                        </div>
+                    </div>
+                    <button class="so-cta pro-btn-neon" onclick="startV3Analysis()"
+                        style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-brain"></i> Lancer l'Analyse Cognitive
+                    </button>
+                </div>
+
+                <div id="v3-panel-results" style="display: none;">
+                    <div class="so-result-summary">
+                        <div class="so-big-score" id="v3-final-score">0%</div>
+                        <div class="so-score-info">
+                            <h4>Compatibilité Globale</h4>
+                            <p>Analyse effectuée par Gemini AI</p>
+                        </div>
+                    </div>
+                    <div class="so-rec-box">
+                        <h5>Recommandation IA</h5>
+                        <p id="v3-rec-text"></p>
+                    </div>
+                    <div id="v3-download-section" style="margin-top: 15px; display: none;">
+                        <button onclick="downloadImprovedCVPDF()" class="pro-btn-neon"
+                            style="width: 100%; height: 40px; font-size: 12px; background: var(--success); border-color: var(--success);">
+                            <i class="fas fa-file-download"></i> Télécharger mon CV Optimisé (PDF)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle Script -->
+    <script>
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // Initialize theme icon
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.getElementById('theme-icon').textContent = '☀️';
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

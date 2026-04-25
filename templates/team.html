@@ -1,0 +1,613 @@
+{% extends "base_v3.html" %}
+
+{% block title %}JobMatch - L'Élite behind the Vision{% endblock %}
+{% block page_title %}Architecture de l'Innovation{% endblock %}
+
+{% block content %}
+<div class="luxury-team-wrapper">
+    <!-- Animated Mesh Background -->
+    <div class="mesh-gradient"></div>
+
+    <!-- Hero Section with Floating Elements -->
+    <div class="team-hero-lux">
+        <div class="hero-badge">The Brains</div>
+        <h1 class="hero-title-lux">Concevoir le <span class="text-glow">Futur</span> du Recrutement</h1>
+        <p class="hero-desc-lux">Une alliance d'expertise scientifique et technique pour repousser les limites de l'IA.
+        </p>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+        </div>
+    </div>
+
+    <!-- Featured Advisor: The Visionary -->
+    <section class="section-lux advisor-section">
+        <div class="glass-card advisor-featured">
+            <div class="advisor-layout">
+                <div class="advisor-visual">
+                    <div class="image-orb">
+                        <img src="/static/images/dr_castro.png" alt="Docteur Castro Houmenou">
+                    </div>
+                    <div class="orb-decor"></div>
+                    <div class="orb-decor-2"></div>
+                </div>
+                <div class="advisor-info-lux">
+                    <span class="label-premium">Visionnaire Originel</span>
+                    <h2 class="name-lux">Docteur Castro Houmenou</h2>
+                    <p class="role-lux">Conseiller Stratégique & Architecte des Idées</p>
+                    <div class="quote-box">
+                        <i class="fas fa-quote-left"></i>
+                        <p>L'IA ne doit pas seulement matcher des mots, elle doit comprendre le potentiel humain.</p>
+                    </div>
+                    <div class="social-links-lux">
+                        <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-btn"><i class="fas fa-paper-plane"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Core Trio Grid -->
+    <section class="section-lux">
+        <div class="section-header-lux">
+            <h2 class="section-title-lux">Engineers & Creatives</h2>
+            <div class="line-decor"></div>
+        </div>
+
+        <div class="team-grid-lux">
+            <!-- Samaké DELAMOU -->
+            <div class="member-card-lux">
+                <div class="card-inner">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-lux primary-grad">SD</div>
+                        <div class="avatar-shadow"></div>
+                    </div>
+                    <h3 class="name-small">Samaké DELAMOU</h3>
+                    <p class="role-small">Co-fondateur & CTO</p>
+                    <div class="tags-lux">
+                        <span>AI Architect</span>
+                        <span>Lead Dev</span>
+                    </div>
+                    <div class="member-hover-content">
+                        <p>Expert en architectures distribuées et modèles prédictifs.</p>
+                        <div class="social-mini">
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Youssouf SYLLA -->
+            <div class="member-card-lux">
+                <div class="card-inner">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-lux secondary-grad">YS</div>
+                        <div class="avatar-shadow"></div>
+                    </div>
+                    <h3 class="name-small">Youssouf SYLLA</h3>
+                    <p class="role-small">Backend Solutions Architect</p>
+                    <div class="tags-lux">
+                        <span>Core Systems</span>
+                        <span>Security</span>
+                    </div>
+                    <div class="member-hover-content">
+                        <p>Gardien de la robustesse et de l'intégrité des données.</p>
+                        <div class="social-mini">
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abdoulaye DIALLO -->
+            <div class="member-card-lux">
+                <div class="card-inner">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-lux accent-grad">AD</div>
+                        <div class="avatar-shadow"></div>
+                    </div>
+                    <h3 class="name-small">Abdoulaye DIALLO</h3>
+                    <p class="role-small">Experience Director</p>
+                    <div class="tags-lux">
+                        <span>UX/UI</span>
+                        <span>Product</span>
+                    </div>
+                    <div class="member-hover-content">
+                        <p>Maître de l'esthétique et de l'ergonomie cognitive.</p>
+                        <div class="social-mini">
+                            <a href="#"><i class="fab fa-dribbble"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join the Revolution Banner -->
+    <div class="cta-lux-banner">
+        <div class="cta-glass">
+            <div class="cta-text">
+                <h2>Envie de marquer l'histoire ?</h2>
+                <p>Nous recrutons des esprits brillants pour notre prochaine phase de scale-up.</p>
+            </div>
+            <a href="mailto:contact@jobmatch.fr" class="btn-lux-primary">Rejoindre l'Aventure</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+    :root {
+        --lux-bg: #030712;
+        --lux-primary: #6366f1;
+        --lux-secondary: #a855f7;
+        --lux-accent: #ec4899;
+        --lux-glass: rgba(255, 255, 255, 0.03);
+        --lux-border: rgba(255, 255, 255, 0.08);
+    }
+
+    .luxury-team-wrapper {
+        font-family: 'Outfit', sans-serif;
+        background-color: var(--lux-bg);
+        color: #f8fafc;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        padding-bottom: 100px;
+    }
+
+    /* Mesh Background Effect */
+    .mesh-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Hero Section */
+    .team-hero-lux {
+        padding: 120px 20px 80px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-badge {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid var(--lux-primary);
+        color: var(--lux-primary);
+        padding: 6px 16px;
+        border-radius: 100px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 24px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .hero-title-lux {
+        font-size: clamp(2.5rem, 8vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        letter-spacing: -2px;
+    }
+
+    .text-glow {
+        color: #fff;
+        text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        background: linear-gradient(135deg, #fff 0%, var(--lux-primary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc-lux {
+        font-size: 1.25rem;
+        color: #94a3b8;
+        max-width: 600px;
+        margin: 0 auto;
+        font-weight: 300;
+    }
+
+    /* Section Common */
+    .section-lux {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto 120px;
+        padding: 0 20px;
+    }
+
+    .section-header-lux {
+        margin-bottom: 60px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .section-title-lux {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #fff;
+        white-space: nowrap;
+    }
+
+    .line-decor {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--lux-border), transparent);
+    }
+
+    /* Advisor Featured Card */
+    .advisor-featured {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--lux-border);
+        border-radius: 40px;
+        padding: 60px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .advisor-layout {
+        display: flex;
+        align-items: center;
+        gap: 80px;
+    }
+
+    .advisor-visual {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        flex-shrink: 0;
+    }
+
+    .image-orb {
+        width: 100%;
+        height: 100%;
+        border-radius: 35% 65% 70% 30% / 30% 30% 70% 70%;
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+        border: 2px solid var(--lux-primary);
+        animation: morph 8s ease-in-out infinite;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes morph {
+        0% {
+            border-radius: 35% 65% 70% 30% / 30% 30% 70% 70%;
+        }
+
+        50% {
+            border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+        }
+
+        100% {
+            border-radius: 35% 65% 70% 30% / 30% 30% 70% 70%;
+        }
+    }
+
+    .image-orb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .orb-decor,
+    .orb-decor-2 {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 1;
+        filter: blur(40px);
+    }
+
+    .orb-decor {
+        width: 150px;
+        height: 150px;
+        background: var(--lux-primary);
+        top: -20px;
+        right: -20px;
+        opacity: 0.3;
+    }
+
+    .orb-decor-2 {
+        width: 100px;
+        height: 100px;
+        background: var(--lux-secondary);
+        bottom: -20px;
+        left: -20px;
+        opacity: 0.3;
+    }
+
+    .advisor-info-lux {
+        flex: 1;
+    }
+
+    .label-premium {
+        color: var(--lux-primary);
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 4px;
+        margin-bottom: 16px;
+        display: block;
+    }
+
+    .name-lux {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .role-lux {
+        font-size: 1.2rem;
+        color: #cbd5e1;
+        margin-bottom: 32px;
+    }
+
+    .quote-box {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 24px;
+        border-radius: 16px;
+        border-left: 4px solid var(--lux-primary);
+        margin-bottom: 32px;
+        position: relative;
+    }
+
+    .quote-box i {
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        color: var(--lux-primary);
+        font-size: 1.5rem;
+        opacity: 0.5;
+    }
+
+    .social-links-lux {
+        display: flex;
+        gap: 16px;
+    }
+
+    .social-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid var(--lux-border);
+    }
+
+    .social-btn:hover {
+        background: var(--lux-primary);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Team Card Grid */
+    .team-grid-lux {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 40px;
+    }
+
+    .member-card-lux {
+        position: relative;
+        border-radius: 32px;
+        background: var(--lux-glass);
+        border: 1px solid var(--lux-border);
+        overflow: hidden;
+        padding: 40px;
+        transition: all 0.5s ease;
+    }
+
+    .member-card-lux:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-10px);
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 30px;
+    }
+
+    .avatar-lux {
+        width: 100%;
+        height: 100%;
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #fff;
+        position: relative;
+        z-index: 2;
+        transform: rotate(-5deg);
+        transition: transform 0.3s ease;
+    }
+
+    .member-card-lux:hover .avatar-lux {
+        transform: rotate(0deg) scale(1.1);
+    }
+
+    .primary-grad {
+        background: linear-gradient(135deg, #6366f1, #4338ca);
+    }
+
+    .secondary-grad {
+        background: linear-gradient(135deg, #a855f7, #7e22ce);
+    }
+
+    .accent-grad {
+        background: linear-gradient(135deg, #ec4899, #db2777);
+    }
+
+    .avatar-shadow {
+        position: absolute;
+        inset: 10px;
+        background: inherit;
+        filter: blur(20px);
+        opacity: 0.6;
+        z-index: 1;
+    }
+
+    .name-small {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .role-small {
+        color: #94a3b8;
+        margin-bottom: 20px;
+    }
+
+    .tags-lux {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    .tags-lux span {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #cbd5e1;
+    }
+
+    .member-hover-content {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+        position: absolute;
+        bottom: 30px;
+        left: 40px;
+        right: 40px;
+        text-align: center;
+    }
+
+    .member-card-lux:hover .member-hover-content {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .member-card-lux:hover .tags-lux,
+    .member-card-lux:hover .role-small,
+    .member-card-lux:hover .name-small {
+        transform: translateY(-20px);
+        transition: transform 0.4s ease;
+    }
+
+    .social-mini {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 15px;
+    }
+
+    .social-mini a {
+        color: #fff;
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+
+    .social-mini a:hover {
+        opacity: 1;
+        color: var(--lux-primary);
+    }
+
+    /* Banner */
+    .cta-lux-banner {
+        max-width: 1200px;
+        margin: 100px auto 0;
+        padding: 0 20px;
+    }
+
+    .cta-glass {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+        border: 1px solid var(--lux-primary);
+        border-radius: 40px;
+        padding: 80px 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-glass::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        animation: shine 6s infinite;
+    }
+
+    @keyframes shine {
+        0% {
+            left: -100%;
+        }
+
+        20% {
+            left: 100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    .btn-lux-primary {
+        background: #fff;
+        color: #030712 !important;
+        padding: 20px 40px;
+        border-radius: 16px;
+        font-weight: 800;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 40px;
+        transition: all 0.3s;
+        box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-lux-primary:hover {
+        transform: scale(1.05) translateY(-5px);
+        box-shadow: 0 30px 60px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Responsiveness */
+    @media (max-width: 1024px) {
+        .advisor-layout {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .advisor-featured {
+            padding: 40px 20px;
+        }
+    }
+</style>
+{% endblock %}

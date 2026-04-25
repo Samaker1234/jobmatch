@@ -1,0 +1,911 @@
+{% extends "base_v3.html" %}
+
+{% block title %}Paramètres - JobMatch{% endblock %}
+
+{% block content %}
+<div class="pro-dashboard-header fade-in">
+    <div class="header-text">
+        <h1 class="gradient-text">Configuration du Compte</h1>
+        <p class="text-muted">Personnalisez votre expérience et gérez la sécurité de votre espace.</p>
+    </div>
+</div>
+
+<div class="settings-layout fade-in">
+    <!-- Premium Sidebar Nav -->
+    <aside class="settings-sidebar">
+        <nav class="settings-nav-v2">
+            <button class="nav-v2-item active" onclick="openTabv2('general', this)">
+                <span class="nav-v2-icon"><i class="fas fa-user-gear"></i></span>
+                <div class="nav-v2-info">
+                    <span class="nav-v2-label">Général</span>
+                    <span class="nav-v2-desc">Profil & Apparence</span>
+                </div>
+            </button>
+            <button class="nav-v2-item" onclick="openTabv2('images', this)">
+                <span class="nav-v2-icon"><i class="fas fa-camera-retro"></i></span>
+                <div class="nav-v2-info">
+                    <span class="nav-v2-label">Identité Visuelle</span>
+                    <span class="nav-v2-desc">Avatar & Bannière</span>
+                </div>
+            </button>
+            <button class="nav-v2-item" onclick="openTabv2('security', this)">
+                <span class="nav-v2-icon"><i class="fas fa-shield-halved"></i></span>
+                <div class="nav-v2-info">
+                    <span class="nav-v2-label">Sécurité</span>
+                    <span class="nav-v2-desc">Mot de passe</span>
+                </div>
+            </button>
+            <div class="sidebar-v2-divider"></div>
+            <button class="nav-v2-item danger" onclick="openTabv2('danger', this)">
+                <span class="nav-v2-icon"><i class="fas fa-skull-crossbones"></i></span>
+                <div class="nav-v2-info">
+                    <span class="nav-v2-label">Zone Critique</span>
+                    <span class="nav-v2-desc">Gestion du compte</span>
+                </div>
+            </button>
+        </nav>
+
+        <!-- Attribution Card -->
+        <div class="advisor-card-mini">
+            <div class="advisor-thumb">
+                <img src="https://media.licdn.com/dms/image/v2/D4E03AQE8S5K8K8K8K8/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1691234567890?e=1715212800&v=beta&t=XXXXX"
+                    alt="Dr Castro">
+            </div>
+            <div class="advisor-text">
+                <p class="advisor-note">"Votre profil est votre vitrine. Soignez chaque détail."</p>
+                <p class="advisor-name">Dr. Castro Houmenou</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="settings-main">
+        <!-- GENERAL TAB -->
+        <section id="general" class="setting-tab-content active">
+            <div class="glass-card">
+                <div class="card-header-v2">
+                    <div class="header-icon"><i class="fas fa-id-card"></i></div>
+                    <h3>Profil Professionnel</h3>
+                </div>
+                <form method="POST" action="/settings" class="v2-form">
+                    <input type="hidden" name="action" value="update_profile">
+                    <div class="v2-form-grid">
+                        <div class="v2-input-group">
+                            <label>Prénom</label>
+                            <input type="text" name="firstname" value="{{ user.firstname }}" placeholder="Votre prénom"
+                                required>
+                        </div>
+                        <div class="v2-input-group">
+                            <label>Nom</label>
+                            <input type="text" name="lastname" value="{{ user.lastname }}" placeholder="Votre nom"
+                                required>
+                        </div>
+                        <div class="v2-input-group full">
+                            <label>Email (Lecteurs seule)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" value="{{ user.email }}" disabled class="readonly">
+                            </div>
+                        </div>
+                        <div class="v2-input-group full">
+                            <label>Profession / Poste Actuel</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-briefcase"></i>
+                                <input type="text" name="profession" value="{{ user.profession or '' }}"
+                                    placeholder="Ex: Lead Developer Cloud">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="v2-form-footer">
+                        <button type="submit" class="btn-premium-v2">
+                            <span>Enregistrer les modifications</span>
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="glass-card mt-6">
+                <div class="card-header-v2">
+                    <div class="header-icon"><i class="fas fa-palette"></i></div>
+                    <h3>Personnalisation Visuelle</h3>
+                </div>
+                <div class="visual-settings">
+                    <div class="visual-item">
+                        <div class="visual-info">
+                            <h4>Mode de Lecture</h4>
+                            <p>Choisissez l'ambiance lumineuse de votre tableau de bord.</p>
+                        </div>
+                        <div class="v2-toggle-group">
+                            <button class="v2-toggle-btn" data-v2-theme="light" onclick="setThemeV2('light')">
+                                <i class="fas fa-sun"></i><span>Clair</span>
+                            </button>
+                            <button class="v2-toggle-btn" data-v2-theme="dark" onclick="setThemeV2('dark')">
+                                <i class="fas fa-moon"></i><span>Sombre</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="v2-visual-divider"></div>
+                    <div class="visual-item">
+                        <div class="visual-info">
+                            <h4>Couleur Identitaire</h4>
+                            <p>Définissez la couleur dominante de votre interface professionnelle.</p>
+                        </div>
+                        <div class="v2-color-grid">
+                            <button class="v2-color-circle" style="background: #4f46e5;"
+                                onclick="setAccentV2('#4f46e5')" title="Indigo"></button>
+                            <button class="v2-color-circle" style="background: #2563eb;"
+                                onclick="setAccentV2('#2563eb')" title="Ocean"></button>
+                            <button class="v2-color-circle" style="background: #7c3aed;"
+                                onclick="setAccentV2('#7c3aed')" title="Royal"></button>
+                            <button class="v2-color-circle" style="background: #db2777;"
+                                onclick="setAccentV2('#db2777')" title="Ruby"></button>
+                            <button class="v2-color-circle" style="background: #ea580c;"
+                                onclick="setAccentV2('#ea580c')" title="Amber"></button>
+                            <button class="v2-color-circle" style="background: #16a34a;"
+                                onclick="setAccentV2('#16a34a')" title="Emerald"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IMAGES TAB -->
+        <section id="images" class="setting-tab-content">
+            <div class="glass-card">
+                <div class="card-header-v2">
+                    <div class="header-icon"><i class="fas fa-images"></i></div>
+                    <h3>Gestion des Médias</h3>
+                </div>
+                <form method="POST" action="/settings" enctype="multipart/form-data" class="v2-form">
+                    <input type="hidden" name="action" value="update_images">
+
+                    <div class="media-management">
+                        <div class="media-block">
+                            <label>Avatar Professionnel</label>
+                            <div class="avatar-v2-wrapper">
+                                <div class="avatar-v2-preview">
+                                    {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture }}" alt="Avatar" id="v2-avatar-preview">
+                                    {% else %}
+                                    <div class="avatar-v2-initials">{{ user.firstname[0] }}{{ user.lastname[0] }}</div>
+                                    {% endif %}
+                                    <div class="avatar-v2-overlay">
+                                        <i class="fas fa-camera"></i>
+                                        <input type="file" name="profile_picture"
+                                            onchange="previewV2(this, 'v2-avatar-preview')">
+                                    </div>
+                                </div>
+                                <div class="avatar-v2-meta">
+                                    <p class="meta-title">Changer la photo</p>
+                                    <p class="meta-desc">Format suggéré: 400x400 (PNG/JPG)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media-block mt-8">
+                            <label>Bannière de Profil</label>
+                            <div class="banner-v2-container">
+                                <div class="banner-v2-preview">
+                                    {% if user.banner_image %}
+                                    <img src="{{ user.banner_image }}" alt="Bannière" id="v2-banner-preview">
+                                    {% else %}
+                                    <div class="banner-v2-empty"><i class="fas fa-mountain-sun"></i><span>Aucune
+                                            bannière définie</span></div>
+                                    {% endif %}
+                                    <div class="banner-v2-overlay">
+                                        <button type="button" class="btn-banner-v2"><i
+                                                class="fas fa-cloud-arrow-up"></i> Sélectionner une bannière</button>
+                                        <input type="file" name="banner_image"
+                                            onchange="previewV2(this, 'v2-banner-preview')">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="v2-form-footer mt-8">
+                        <button type="submit" class="btn-premium-v2">
+                            <span>Mettre à jour les médias</span>
+                            <i class="fas fa-upload"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECURITY TAB -->
+        <section id="security" class="setting-tab-content">
+            <div class="glass-card">
+                <div class="card-header-v2">
+                    <div class="header-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Sécurité du Compte</h3>
+                </div>
+                <form method="POST" action="/settings" class="v2-form">
+                    <input type="hidden" name="action" value="change_password">
+                    <div class="v2-form-grid">
+                        <div class="v2-input-group full">
+                            <label>Mot de passe actuel</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" name="current_password" required
+                                    placeholder="Confirmez votre secret actuel">
+                            </div>
+                        </div>
+                        <div class="v2-input-group">
+                            <label>Nouveau mot de passe</label>
+                            <input type="password" name="new_password" required minlength="6"
+                                placeholder="8 caractères min.">
+                        </div>
+                        <div class="v2-input-group">
+                            <label>Confirmation</label>
+                            <input type="password" name="confirm_password" required minlength="6"
+                                placeholder="Répétez le mot de passe">
+                        </div>
+                    </div>
+                    <div class="v2-form-footer">
+                        <button type="submit" class="btn-premium-v2">
+                            <span>Réinitialiser le mot de passe</span>
+                            <i class="fas fa-shield-check"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- DANGER TAB -->
+        <section id="danger" class="setting-tab-content">
+            <div class="glass-card danger-v2">
+                <div class="card-header-v2">
+                    <div class="header-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                    <h3 class="text-danger">Clôture du Compte</h3>
+                </div>
+                <div class="danger-v2-content">
+                    <div class="danger-caution">
+                        <p><strong>Action irréversible :</strong> La suppression de votre compte entraînera la perte
+                            définitive de toutes vos analyses, candidatures et données de profil. Aucune récupération
+                            n'est possible.</p>
+                    </div>
+                    <div class="danger-v2-action">
+                        <p>Souhaitez-vous vraiment quitter JobMatch ?</p>
+                        <form method="POST" action="/settings"
+                            onsubmit="return confirm('Êtes-vous ABSOLUMENT sûr ? Cette action est définitive.');">
+                            <input type="hidden" name="action" value="delete_account">
+                            <button type="submit" class="btn-danger-v2">Supprimer définitivement mon accès</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<style>
+    /* CSS Modernisé et Premium */
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+    }
+
+    .dark-mode {
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Layout */
+    .settings-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 40px;
+        align-items: start;
+        margin-top: 30px;
+    }
+
+    @media (max-width: 1024px) {
+        .settings-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .settings-sidebar {
+            position: sticky;
+            top: 80px;
+            z-index: 10;
+        }
+    }
+
+    /* Sidebar Nav */
+    .settings-nav-v2 {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 12px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .nav-v2-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 18px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: left;
+        color: var(--text-secondary);
+    }
+
+    .nav-v2-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border-radius: 12px;
+        font-size: 18px;
+        color: var(--text-muted);
+        transition: all 0.3s;
+    }
+
+    .nav-v2-label {
+        display: block;
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--text-primary);
+    }
+
+    .nav-v2-desc {
+        display: block;
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    .nav-v2-item:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: translateX(4px);
+    }
+
+    .nav-v2-item.active {
+        background: var(--primary);
+        box-shadow: 0 8px 20px -5px var(--primary);
+    }
+
+    .nav-v2-item.active .nav-v2-label,
+    .nav-v2-item.active .nav-v2-desc,
+    .nav-v2-item.active .nav-v2-icon {
+        color: white;
+    }
+
+    .nav-v2-item.active .nav-v2-icon {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-v2-item.danger:hover {
+        background: rgba(220, 53, 69, 0.1);
+    }
+
+    .sidebar-v2-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 12px 16px;
+        opacity: 0.5;
+    }
+
+    /* Advisor Card */
+    .advisor-card-mini {
+        margin-top: 24px;
+        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .advisor-thumb {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 2px solid var(--primary);
+    }
+
+    .advisor-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .advisor-note {
+        font-style: italic;
+        font-size: 12px;
+        color: var(--text-primary);
+        line-height: 1.4;
+        margin-bottom: 4px;
+    }
+
+    .advisor-name {
+        font-weight: 700;
+        font-size: 11px;
+        color: var(--primary);
+        text-transform: uppercase;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 28px;
+        padding: 32px;
+        box-shadow: var(--shadow-soft);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-header-v2 {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border-radius: 14px;
+        font-size: 20px;
+        color: var(--primary);
+    }
+
+    /* Form Styling */
+    .v2-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .v2-input-group.full {
+        grid-column: span 2;
+    }
+
+    .v2-input-group label {
+        display: block;
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .v2-input-group input {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+
+    .v2-input-group input:focus {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px -10px var(--primary);
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-with-icon i {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 16px;
+    }
+
+    .input-with-icon input {
+        padding-left: 50px;
+    }
+
+    .readonly {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .v2-form-footer {
+        margin-top: 32px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-premium-v2 {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px -5px var(--primary);
+    }
+
+    .btn-premium-v2:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 30px -8px var(--primary);
+    }
+
+    /* Visual Settings */
+    .visual-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .visual-info h4 {
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .visual-info p {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .v2-toggle-group {
+        display: flex;
+        background: var(--bg-tertiary);
+        padding: 5px;
+        border-radius: 16px;
+    }
+
+    .v2-toggle-btn {
+        padding: 10px 20px;
+        border-radius: 12px;
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .v2-toggle-btn.active {
+        background: white;
+        color: var(--primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode .v2-toggle-btn.active {
+        background: var(--bg-primary);
+    }
+
+    .v2-color-grid {
+        display: flex;
+        gap: 12px;
+    }
+
+    .v2-color-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .v2-color-circle:hover {
+        transform: scale(1.2);
+    }
+
+    .v2-color-circle.active {
+        border-color: var(--text-primary);
+        transform: scale(1.1);
+    }
+
+    /* Media Blocks */
+    .avatar-v2-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .avatar-v2-preview {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border-radius: 30px;
+        overflow: hidden;
+        background: var(--bg-tertiary);
+        border: 2px solid var(--border);
+    }
+
+    .avatar-v2-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-v2-initials {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .avatar-v2-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        cursor: pointer;
+    }
+
+    .avatar-v2-preview:hover .avatar-v2-overlay {
+        opacity: 1;
+    }
+
+    .avatar-v2-overlay input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .banner-v2-preview {
+        position: relative;
+        width: 100%;
+        height: 160px;
+        background: var(--bg-tertiary);
+        border-radius: 20px;
+        border: 2px dashed var(--border);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .banner-v2-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .banner-v2-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-muted);
+    }
+
+    .banner-v2-empty i {
+        font-size: 30px;
+    }
+
+    .banner-v2-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .banner-v2-preview:hover .banner-v2-overlay {
+        opacity: 1;
+    }
+
+    .btn-banner-v2 {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .banner-v2-overlay input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Danger Zone */
+    .danger-v2 {
+        background: rgba(239, 68, 68, 0.05);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .danger-caution {
+        background: #fef2f2;
+        border-left: 4px solid #ef4444;
+        padding: 16px;
+        border-radius: 0 12px 12px 0;
+        margin-bottom: 24px;
+        color: #991b1b;
+        font-size: 14px;
+    }
+
+    .dark-mode .danger-caution {
+        background: rgba(239, 68, 68, 0.1);
+        color: #fecaca;
+    }
+
+    .btn-danger-v2 {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 14px 24px;
+        border-radius: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-danger-v2:hover {
+        background: #dc2626;
+        transform: scale(1.02);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    /* Animations */
+    .fade-in {
+        animation: fadeInV2 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeInV2 {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .setting-tab-content {
+        display: none;
+    }
+
+    .setting-tab-content.active {
+        display: block;
+        animation: slideInContent 0.5s ease-out;
+    }
+
+    @keyframes slideInContent {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .gradient-text {
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+</style>
+
+<script>
+    // System V2 - Logic
+    function openTabv2(tabId, btn) {
+        // Tabs
+        document.querySelectorAll('.setting-tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+
+        // Buttons
+        document.querySelectorAll('.nav-v2-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Animation de scroll si besoin
+        if (window.innerWidth < 1024) {
+            window.scrollTo({ top: document.querySelector('.settings-main').offsetTop - 100, behavior: 'smooth' });
+        }
+    }
+
+    function previewV2(input, previewId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById(previewId);
+                if (preview) {
+                    preview.src = e.target.result;
+                } else {
+                    // Si img n'existe pas encore (cas placeholder)
+                    const container = previewId === 'v2-avatar-preview' ?
+                        document.querySelector('.avatar-v2-preview') :
+                        document.querySelector('.banner-v2-preview');
+                    container.innerHTML = `<img src="${e.target.result}" id="${previewId}">`;
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Theme & Identity Settings V2
+    function setThemeV2(theme) {
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark-mode', isDark);
+        localStorage.setItem('darkMode', isDark);
+        updateThemeUIv2(theme);
+    }
+
+    function setAccentV2(color) {
+        document.documentElement.style.setProperty('--primary', color);
+        document.documentElement.style.setProperty('--primary-dark', color);
+        localStorage.setItem('accentColor', color);
+        updateAccentUIv2(color);
+    }
+
+    function updateThemeUIv2(theme) {
+        document.querySelectorAll('[data-v2-theme]').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.v2Theme === theme);
+        });
+    }
+
+    function updateAccentUIv2(color) {
+        document.querySelectorAll('.v2-color-circle').forEach(btn => {
+            const btnColor = btn.style.background.replace(/\s/g, '').toLowerCase();
+            const targetColor = color.toLowerCase();
+            // Comparaison simple pour l'UI
+            btn.classList.toggle('active', btnColor.includes(targetColor));
+        });
+    }
+
+    // Init Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentTheme = localStorage.getItem('darkMode') === 'true' ? 'dark' : 'light';
+        updateThemeUIv2(currentTheme);
+
+        const currentColor = localStorage.getItem('accentColor') || '#4f46e5';
+        updateAccentUIv2(currentColor);
+    });
+</script>
+{% endblock %}

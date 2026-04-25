@@ -1,0 +1,828 @@
+{% extends "base_v3.html" %}
+
+{% block title %}Optimiseur CV{% endblock %}
+{% block page_title %}Optimiseur CV{% endblock %}
+
+{% block content %}
+<div class="pro-metric-grid">
+    <div class="metric-card-pro highlight">
+        <div class="metric-header">
+            <span class="metric-title">CV Évalués</span>
+            <span class="trend-pro pos">+2</span>
+        </div>
+        <div class="metric-value">5</div>
+        <div class="metric-footer">CVs analysés cette semaine</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Score Moyen Amélioré</span>
+            <span class="trend-pro pos">+18%</span>
+        </div>
+        <div class="metric-value">+18%</div>
+        <div class="metric-footer">Progression des scores</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Suggestions Appliquées</span>
+        </div>
+        <div class="metric-value">23</div>
+        <div class="metric-footer">Recommandations utilisées</div>
+    </div>
+</div>
+
+<div class="pro-grid-main">
+    <!-- Main Editor -->
+    <div class="pro-card">
+        <div class="card-head">
+            <h3>📄 Téléchargez votre CV</h3>
+        </div>
+        <div class="upload-drop-zone" id="uploadZone">
+            <div class="drop-icon">📤</div>
+            <p class="drop-title">Glissez-déposez votre CV (PDF)</p>
+            <p class="drop-subtitle">ou cliquez pour sélectionner</p>
+            <input type="file" id="cvFile" accept=".pdf" hidden>
+        </div>
+        <div id="uploadProgress" style="display: none; margin-top: 20px;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText" style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Traitement...</p>
+        </div>
+
+
+        <div style="margin-top: 24px;">
+            <div class="ai-input-container">
+                <div class="ai-input-header">
+                    <label for="jobOfferInput" class="ai-label">
+                        <span class="ai-icon">✨</span>
+                        Offre d'emploi ciblée
+                    </label>
+                    <button onclick="generateTestJobOffer()" class="ai-generate-btn" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                        </svg>
+                        Générer un exemple
+                    </button>
+                </div>
+                <div class="ai-input-wrapper">
+                    <textarea id="jobOfferInput" class="ai-textarea" placeholder="Collez ici l'offre d'emploi..."
+                        rows="6"></textarea>
+                    <div class="ai-focus-border"></div>
+                </div>
+                <div class="ai-input-footer">
+                    <span>L'IA analysera ce texte pour optimiser votre CV</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="pro-side-widgets">
+        <div class="pro-card user-quick-card">
+            <div class="qr-header">
+                <div class="qr-avatar">{{ user.firstname[0] }}</div>
+                <h3>Analyse IA</h3>
+            </div>
+            <div class="qr-stats">
+                <div class="qr-stat">
+                    <span class="val" id="cv-quality-score">--%</span>
+                    <span class="lab">Qualité CV</span>
+                </div>
+                <div class="qr-stat">
+                    <span class="val" id="cv-improve-count">--</span>
+                    <span class="lab">Suggestions IA</span>
+                </div>
+            </div>
+            <button class="pro-btn-outline full">Démarrer l'analyse</button>
+        </div>
+
+        <div class="pro-card feed-card">
+            <div class="card-head">
+                <h3>💡 Conseils IA</h3>
+            </div>
+            <div class="recommendations-list">
+                <div class="rec-item">
+                    <span class="rec-icon">📝</span>
+                    <div class="rec-content">
+                        <p class="rec-title">Mettre à jour l'objectif</p>
+                        <span class="rec-desc">Soyez plus spécifique</span>
+                    </div>
+                    <span class="rec-arrow">→</span>
+                </div>
+                <div class="rec-item">
+                    <span class="rec-icon">🏆</span>
+                    <div class="rec-content">
+                        <p class="rec-title">Ajouter des réalisations</p>
+                        <span class="rec-desc">Via des chiffres clés</span>
+                    </div>
+                    <span class="rec-arrow">→</span>
+                </div>
+                <div class="rec-item">
+                    <span class="rec-icon">🔑</span>
+                    <div class="rec-content">
+                        <p class="rec-title">Compétences techniques</p>
+                        <span class="rec-desc">Complétez la liste</span>
+                    </div>
+                    <span class="rec-arrow">→</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div id="resultsContainer" style="display: none; margin-top: 24px;">
+    <div class="pro-bottom-grid">
+        <div class="pro-card insights-card">
+            <div class="card-head">
+                <h3>📊 Analyse Détaillée</h3>
+            </div>
+            <div class="skills-list">
+                <div class="skill-item">
+                    <span class="skill-name">Présentation</span>
+                    <span class="skill-bar">
+                        <span class="skill-fill" style="width: 85%"></span>
+                    </span>
+                    <span class="skill-pct">85%</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Contenu</span>
+                    <span class="skill-bar">
+                        <span class="skill-fill" style="width: 72%"></span>
+                    </span>
+                    <span class="skill-pct">72%</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Mots-clés</span>
+                    <span class="skill-bar">
+                        <span class="skill-fill" style="width: 68%"></span>
+                    </span>
+                    <span class="skill-pct">68%</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Expérience</span>
+                    <span class="skill-bar">
+                        <span class="skill-fill" style="width: 91%"></span>
+                    </span>
+                    <span class="skill-pct">91%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pro-card insights-card">
+            <div class="card-head">
+                <h3>✨ Recommandations</h3>
+            </div>
+            <div id="recommendationsBox" style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+                Vos recommandations apparaîtront ici après analyse
+            </div>
+        </div>
+
+        <div class="pro-card insights-card">
+            <div class="card-head">
+                <h3>📥 Télécharger CV Optimisé</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button class="cta-button" onclick="downloadImprovedCV('pdf')"
+                    style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                    📄 PDF
+                </button>
+                <button class="cta-button" onclick="downloadImprovedCV('pptx')"
+                    style="background: linear-gradient(135deg, #e67e22, #d35400);">
+                    📊 PPTX
+                </button>
+                <button class="cta-button secondary" onclick="downloadImprovedCV('html')">
+                    🌐 HTML
+                </button>
+                <button class="cta-button secondary" onclick="previewImprovedCV()">
+                    👁️ Aperçu
+                </button>
+            </div>
+            <button class="cta-button" onclick="openEmailModal()"
+                style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                📧 Envoyer par Email
+            </button>
+            <button class="cta-button" onclick="openCandidacyModal()"
+                style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, #10b981, #059669);">
+                🎯 Déclarer ma Candidature
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Candidacy Modal -->
+<div class="cv-modal-overlay" id="candidacyModal">
+    <div class="cv-modal">
+        <div class="cv-modal-icon" style="background: rgba(16, 185, 129, 0.1);">
+            <i class="fas fa-bullseye" style="font-size: 28px; color: #10b981;"></i>
+        </div>
+        <h3 class="cv-modal-title">Enregistrer votre candidature</h3>
+        <p class="cv-modal-desc">Où avez-vous postulé avec ce CV ? Nous suivrons vos statistiques de succès.</p>
+        
+        <div style="text-align: left; margin-bottom: 15px;">
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ENTREPRISE</label>
+            <input type="text" class="cv-modal-input" id="candCompany" placeholder="Ex: Google, TechCorp..." style="margin-bottom: 10px;">
+        </div>
+        
+        <div style="text-align: left; margin-bottom: 20px;">
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">POSTE</label>
+            <input type="text" class="cv-modal-input" id="candJob" placeholder="Ex: Développeur Full Stack...">
+        </div>
+
+        <div class="cv-modal-actions">
+            <button class="cv-modal-btn cancel" onclick="closeCandidacyModal()"><i class="fas fa-xmark"></i>
+                Plus tard</button>
+            <button class="cv-modal-btn primary" onclick="submitCandidacy()" style="background: linear-gradient(135deg, #10b981, #059669);">
+                <i class="fas fa-check"></i> Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Email Prompt Modal -->
+<div class="cv-modal-overlay" id="emailModal">
+    <div class="cv-modal">
+        <div class="cv-modal-icon">
+            <i class="fas fa-envelope" style="font-size: 28px; color: var(--primary);"></i>
+        </div>
+        <h3 class="cv-modal-title">Envoyer votre CV optimisé</h3>
+        <p class="cv-modal-desc">Le CV sera envoyé en pièce jointe PDF à l'adresse indiquée.</p>
+        <input type="email" class="cv-modal-input" id="emailInput" placeholder="email@exemple.com">
+        <div class="cv-modal-actions">
+            <button class="cv-modal-btn cancel" onclick="closeEmailModal()"><i class="fas fa-xmark"></i>
+                Annuler</button>
+            <button class="cv-modal-btn primary" onclick="sendCvByEmail()"><i class="fas fa-paper-plane"></i>
+                Envoyer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="cv-toast" id="cvToast">
+    <span class="cv-toast-msg"></span>
+</div>
+
+<script>
+    const uploadZone = document.getElementById('uploadZone');
+    const cvFile = document.getElementById('cvFile');
+
+    uploadZone.addEventListener('click', () => cvFile.click());
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.style.opacity = '0.7'; });
+    uploadZone.addEventListener('dragleave', () => { uploadZone.style.opacity = '1'; });
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.style.opacity = '1';
+        if (e.dataTransfer.files.length > 0) {
+            cvFile.files = e.dataTransfer.files;
+            handleFileUpload();
+        }
+    });
+
+    cvFile.addEventListener('change', handleFileUpload);
+
+    let currentImprovedHtml = "";
+    let currentCvData = null;
+    let currentCandidacyId = null;
+
+    async function handleFileUpload() {
+        const file = cvFile.files[0];
+        if (!file) return;
+
+        const uploadProgress = document.getElementById('uploadProgress');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const jobOffer = document.getElementById('jobOfferInput').value.trim();
+
+        uploadProgress.style.display = 'block';
+        resultsContainer.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('file', file);
+        if (jobOffer) {
+            formData.append('job_offer', jobOffer);
+        }
+
+        try {
+            progressText.textContent = jobOffer ? "Optimisation Gemini en cours..." : "Analyse en cours...";
+
+            const response = await fetch('/api/improve-cv', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                currentImprovedHtml = data.html;
+                currentCvData = data.data;
+                currentCandidacyId = data.candidacy_id;
+
+                // Update UI with results
+                let improvementsHtml = data.improvements.map(imp => `<div style="margin-bottom: 8px;">${imp}</div>`).join('');
+
+                if (data.has_gemini) {
+                    improvementsHtml += '<div style="margin-top: 12px; padding: 12px; background: rgba(52, 152, 219, 0.1); border-radius: 6px; color: #3498db; font-weight: 600;">✨ Optimisé par Gemini AI en fonction de l\'offre d\'emploi</div>';
+                }
+
+                document.getElementById('recommendationsBox').innerHTML = improvementsHtml;
+
+                // Update sidebar stats
+                if (data.score_optimisation) {
+                    document.getElementById('cv-quality-score').textContent = data.score_optimisation + '%';
+                } else if (data.data && data.data.score_optimisation) {
+                    document.getElementById('cv-quality-score').textContent = data.data.score_optimisation + '%';
+                } else if (data.score_matching) {
+                    document.getElementById('cv-quality-score').textContent = data.score_matching + '%';
+                }
+
+                if (data.improvements) {
+                    document.getElementById('cv-improve-count').textContent = data.improvements.length;
+                }
+
+                // Show results
+                resultsContainer.style.display = 'block';
+                progressText.textContent = "Optimisation terminée ! Votre CV a été envoyé par email.";
+                progressFill.style.width = '100%';
+            } else {
+                const msg = data.details ? `❌ ${data.error} : ${data.details}` : `❌ Erreur: ${data.error}`;
+                alert(msg);
+                uploadProgress.style.display = 'none';
+            }
+        } catch (err) {
+            console.error(err);
+            showCvToast("❌ Une erreur est survenue lors de l'optimisation.", 'error');
+            uploadProgress.style.display = 'none';
+        }
+    }
+
+    async function downloadImprovedCV(format = 'html') {
+        if (!currentImprovedHtml || !currentCvData) {
+            showCvToast("⚠️ Aucune version optimisée disponible.", 'error');
+            return;
+        }
+
+        try {
+            if (format === 'html') {
+                const response = await fetch('/api/download-cv-html', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        html: currentImprovedHtml,
+                        nom: 'Mon_CV_Optimise'
+                    })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "Mon_CV_Optimise.html";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    showCvToast("❌ Erreur lors du téléchargement.", 'error');
+                }
+            } else if (format === 'pdf') {
+                const response = await fetch('/api/download-cv-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        cv_data: currentCvData,
+                        nom: 'Mon_CV_Optimise'
+                    })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "Mon_CV_Optimise.pdf";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    showCvToast("❌ Erreur lors du téléchargement.", 'error');
+                }
+            } else if (format === 'pptx') {
+                const response = await fetch('/api/download-cv-pptx', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        cv_data: currentCvData,
+                        nom: 'Mon_CV_Optimise'
+                    })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "Mon_CV_Optimise.pptx";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    showCvToast("❌ Erreur lors du téléchargement.", 'error');
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            showCvToast("❌ Erreur technique lors du téléchargement.", 'error');
+        }
+    }
+
+    function previewImprovedCV() {
+        if (!currentImprovedHtml) {
+            showCvToast("⚠️ Aucune version optimisée disponible.", 'error');
+            return;
+        }
+        const win = window.open('', '_blank');
+        win.document.write(currentImprovedHtml);
+        win.document.close();
+    }
+
+    async function generateTestJobOffer() {
+        const jobOfferInput = document.getElementById('jobOfferInput');
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Génération...";
+
+        try {
+            const response = await fetch('/api/generate-test-job-offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                jobOfferInput.value = data.job_offer;
+                // Add a subtle highlight animation
+                jobOfferInput.style.transition = 'all 0.3s ease';
+                jobOfferInput.style.background = 'rgba(52, 152, 219, 0.1)';
+                setTimeout(() => {
+                    jobOfferInput.style.background = '';
+                }, 1000);
+            } else {
+                alert(`❌ Erreur: ${data.error}`);
+            }
+        } catch (err) {
+            console.error(err);
+            showCvToast("❌ Erreur lors de la génération de l'offre.", 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+
+    // ─── Email Modal & Toast ───
+    function showCvToast(msg, type = 'info') {
+        const toast = document.getElementById('cvToast');
+        toast.querySelector('.cv-toast-msg').textContent = msg;
+        toast.className = `cv-toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    function openEmailModal() {
+        if (!currentCvData) {
+            showCvToast('⚠️ Aucun CV optimisé disponible.', 'error');
+            return;
+        }
+        document.getElementById('emailModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('emailInput').focus(), 150);
+    }
+
+    function closeEmailModal() {
+        document.getElementById('emailModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    async function sendCvByEmail() {
+        const email = document.getElementById('emailInput').value.trim();
+        if (!email) {
+            showCvToast('⚠️ Veuillez saisir une adresse email.', 'error');
+            return;
+        }
+
+        closeEmailModal();
+        showCvToast('📧 Envoi en cours...', 'info');
+
+        try {
+            const resp = await fetch('/api/send-cv-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    cv_data: currentCvData,
+                    email: email,
+                    nom: 'CV_Optimise_JobMatch'
+                })
+            });
+            const data = await resp.json();
+            if (data.success) {
+                showCvToast(`✅ ${data.message}`, 'success');
+            } else {
+                showCvToast(`❌ ${data.error}`, 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            showCvToast('❌ Erreur réseau lors de l\'envoi.', 'error');
+        }
+    }
+
+    // ─── Candidacy Functions ───
+    function openCandidacyModal() {
+        if (!currentCvData) {
+            showCvToast('⚠️ Veuillez d\'abord optimiser votre CV.', 'error');
+            return;
+        }
+        
+        // Pré-remplir le poste
+        if (currentCvData.titre_professionnel) {
+            document.getElementById('candJob').value = currentCvData.titre_professionnel;
+        }
+        
+        document.getElementById('candidacyModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCandidacyModal() {
+        document.getElementById('candidacyModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    async function submitCandidacy() {
+        const company = document.getElementById('candCompany').value.trim();
+        const job = document.getElementById('candJob').value.trim();
+
+        if (!company) {
+            showCvToast('⚠️ Veuillez renseigner l\'entreprise.', 'warning');
+            return;
+        }
+
+        try {
+            // Si on a déjà une candidacy_id créée automatiquement, on la met à jour
+            // Sinon (cas rare), on pourrait appeler une route de création, mais ici on privilégie l'update
+            const url = currentCandidacyId 
+                ? `/api/candidacy/submit/${currentCandidacyId}` 
+                : '/api/candidacy/add'; // Fallback au cas où
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    company: company,
+                    job_title: job // On permet de corriger le titre si besoin
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showCvToast('✅ Candidature déclarée comme soumise !', 'success');
+                closeCandidacyModal();
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 1500);
+            } else {
+                showCvToast(`❌ ${data.error}`, 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            showCvToast('❌ Erreur lors de l\'enregistrement.', 'error');
+        }
+    }
+
+</script>
+
+<style>
+    .upload-drop-zone {
+        padding: 40px 20px;
+        border: 2px dashed var(--border);
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .upload-drop-zone:hover {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(99, 102, 241, 0.02));
+    }
+
+    .drop-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+    }
+
+    .drop-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 6px 0;
+    }
+
+    .drop-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: var(--bg-tertiary);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        width: 0%;
+        animation: progressing 2s ease-in-out;
+    }
+
+    @keyframes progressing {
+        0% {
+            width: 0%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+
+    /* Modal Styles */
+    .cv-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cv-modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .cv-modal {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border-radius: 20px;
+        padding: 32px;
+        width: 100%;
+        max-width: 440px;
+        text-align: center;
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .cv-modal-overlay.active .cv-modal {
+        transform: scale(1) translateY(0);
+    }
+
+    .cv-modal-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .cv-modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+
+    .cv-modal-desc {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .cv-modal-input {
+        width: 100%;
+        padding: 12px 16px;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 15px;
+        color: #1e293b;
+        margin-bottom: 24px;
+        transition: all 0.2s ease;
+    }
+
+    .cv-modal-input:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .cv-modal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .cv-modal-btn {
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .cv-modal-btn.cancel {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+    .cv-modal-btn.cancel:hover {
+        background: #e2e8f0;
+        color: #475569;
+    }
+
+    .cv-modal-btn.primary {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+    }
+
+    .cv-modal-btn.primary:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Toast Styles */
+    .cv-toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(8px);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    .cv-toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+
+    .cv-toast.success {
+        background: rgba(16, 185, 129, 0.9);
+    }
+
+    .cv-toast.error {
+        background: rgba(239, 68, 68, 0.9);
+    }
+
+    .cv-toast.warning {
+        background: rgba(245, 158, 11, 0.9);
+    }
+</style>
+{% endblock %}

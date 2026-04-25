@@ -1,0 +1,804 @@
+{% extends "base_v3.html" %}
+
+{% block title %}Analyseur d'Offres{% endblock %}
+{% block page_title %}Analyseur d'Offres{% endblock %}
+
+{% block content %}
+<!-- Tab Navigation -->
+<div class="pro-tabs"
+    style="display: flex; gap: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+    <button class="pro-tab-btn active" onclick="switchTab('analysis')" id="tab-analysis">Analyse de
+        Compatibilité</button>
+    <button class="pro-tab-btn" onclick="switchTab('generation')" id="tab-generation">Génération d'Offre</button>
+</div>
+
+<div class="pro-metric-grid">
+    <div class="metric-card-pro highlight">
+        <div class="metric-header">
+            <span class="metric-title">Offres Analysées</span>
+            <span class="trend-pro pos">+5</span>
+        </div>
+        <div class="metric-value">42</div>
+        <div class="metric-footer">Offres dans votre historique</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Compatibilité Moyenne</span>
+            <span class="trend-pro pos">+7%</span>
+        </div>
+        <div class="metric-value">76%</div>
+        <div class="metric-footer">Score moyen des analyses</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Offres Sauvegardées</span>
+        </div>
+        <div class="metric-value">12</div>
+        <div class="metric-footer">À explorer plus tard</div>
+    </div>
+</div>
+
+<div class="pro-grid-main">
+    <!-- Analysis Section -->
+    <div id="section-analysis" class="tab-section active">
+        <div class="pro-card">
+            <div class="card-head">
+                <h3>🔍 Analyse de Compatibilité</h3>
+                <p class="subtitle-text">Analysez la pertinence de votre CV par rapport à n'importe quelle offre
+                    d'emploi grâce à notre IA.</p>
+            </div>
+
+            <div class="analysis-grid-container">
+                <!-- Job Offer Card -->
+                <!-- Job Offer Card (New Design) -->
+                <div class="ai-input-container">
+                    <div class="ai-input-header">
+                        <label for="jobOfferText" class="ai-label">
+                            <span class="ai-icon">✨</span>
+                            Offre d'Emploi
+                        </label>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="document.getElementById('job-image-input').click()" class="ai-generate-btn"
+                                type="button" title="Uploader une image d'offre">
+                                <i class="fas fa-camera"></i> Vision
+                            </button>
+                            <input type="file" id="job-image-input" hidden accept="image/*"
+                                onchange="handleJobImageUpload(this)">
+                            <button onclick="generateTestJobOfferForAnalysis()" class="ai-generate-btn" type="button"
+                                title="Générer une offre test IA">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                </svg>
+                                Démo IA
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ai-input-wrapper">
+                        <textarea id="jobOfferText" class="ai-textarea"
+                            placeholder="Collez le texte de l'offre d'emploi ou uploadez une image..."
+                            rows="6"></textarea>
+                        <div class="ai-focus-border"></div>
+                    </div>
+                    <div class="ai-input-footer">
+                        <span>L'IA peut lire vos captures d'écran LinkedIn/Photos</span>
+                    </div>
+                </div>
+
+                <!-- CV Upload Card -->
+                <!-- CV Upload Card (New Design) -->
+                <div class="ai-input-container">
+                    <div class="ai-input-header">
+                        <label class="ai-label">
+                            <span class="ai-icon">📄</span>
+                            Votre CV (PDF)
+                        </label>
+                    </div>
+                    <div class="ai-input-wrapper">
+                        <div class="ai-drop-zone" id="cv-drop-zone">
+                            <div class="ai-upload-content">
+                                <span class="ai-upload-icon">📤</span>
+                                <p class="ai-upload-text">Glissez votre fichier ici</p>
+                                <p class="ai-upload-sub" id="cv-file-text">ou cliquez pour parcourir</p>
+                            </div>
+                            <input type="file" id="cv-file-input" hidden accept="application/pdf">
+                        </div>
+                        <div class="ai-focus-border"></div>
+                    </div>
+                    <div class="ai-input-footer">
+                        <span>Format PDF uniquement - Max 5Mo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-row" style="margin-top: 32px; display: flex; justify-content: center;">
+                <button onclick="analyzeCompatibilityV3()" class="ai-action-btn" id="btn-analyze">
+                    <div class="ai-btn-content">
+                        <span class="ai-btn-icon">🧠</span>
+                        Lancer l'Analyse Cognitive
+                    </div>
+                    <div class="ai-btn-glow"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generation Section (Hidden by default) -->
+    <div id="section-generation" class="tab-section" style="display: none;">
+        <div class="pro-card">
+            <div class="card-head">
+                <h3>✨ Générateur d'Offre IA</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div class="so-group">
+                    <label>Titre du Poste</label>
+                    <input type="text" id="gen-job-title" placeholder="ex: Senior Fullstack Developer"
+                        style="width: 100%; padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
+                </div>
+                <div class="so-group">
+                    <label>Entreprise</label>
+                    <input type="text" id="gen-company" placeholder="ex: TechInnovate"
+                        style="width: 100%; padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
+                </div>
+                <div class="so-group" style="grid-column: span 2;">
+                    <label>Compétences Clés (séparées par des virgules)</label>
+                    <input type="text" id="gen-skills" placeholder="ex: React, Node.js, AWS, Python"
+                        style="width: 100%; padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button onclick="generateOfferV3()" class="pro-cta-btn" id="btn-generate"
+                    style="flex: 2; padding: 16px; font-weight: 700; background: var(--secondary);">
+                    Générer l'Offre avec Gemini
+                </button>
+                <button onclick="generateOfferAsImage()" class="pro-btn-outline" id="btn-generate-image"
+                    style="flex: 1; padding: 16px; font-weight: 700; border: 1px solid var(--primary); color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-image"></i> Générer en Image
+                </button>
+            </div>
+
+            <!-- Generation Result Container -->
+            <div id="gen-result-container"
+                style="display: none; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h4 style="margin: 0;">Offre Générée</h4>
+                    <button class="btn-clear-notif" onclick="copyGenOffer()">Copier le texte</button>
+                </div>
+                <div id="gen-result-text"
+                    style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px; font-size: 0.9rem; line-height: 1.6; max-height: 400px; overflow-y: auto; color: var(--text-primary); border: 1px solid var(--border);">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Sidebar (Dynamic for Analysis) -->
+    <div class="pro-side-widgets" id="resultsPanel" style="display: none;">
+        <div class="pro-card user-quick-card">
+            <div class="qr-header">
+                <div class="qr-avatar" id="scoreAvatar"
+                    style="background: var(--primary); color: white; border: none; font-weight: 900;">0%</div>
+                <h3>Score Global</h3>
+            </div>
+            <div class="qr-stats">
+                <div class="qr-stat">
+                    <span class="val" id="matchScore">--</span>
+                    <span class="lab">Compatibilité</span>
+                </div>
+                <div class="qr-stat">
+                    <span class="val" id="skillMatch">--</span>
+                    <span class="lab">Compétences</span>
+                </div>
+            </div>
+            <button class="pro-btn-outline full" onclick="saveOffer()">Sauvegarder</button>
+        </div>
+
+        <div class="pro-card feed-card">
+            <div class="card-head">
+                <h3>💬 Recommandations</h3>
+            </div>
+            <div id="recsBox" style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Analysis Details -->
+<div id="detailSection" style="display: none; margin-top: 24px;">
+    <div class="pro-bottom-grid">
+        <div class="pro-card insights-card">
+            <div class="card-head">
+                <h3>✅ Points Forts</h3>
+            </div>
+            <div id="matchingSkills" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px 0;"></div>
+        </div>
+
+        <div class="pro-card insights-card">
+            <div class="card-head">
+                <h3>⚠️ À Améliorer</h3>
+            </div>
+            <div id="missingSkills" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px 0;"></div>
+        </div>
+
+        <div class="pro-card insights-card">
+            <div class="card-head">
+                <h3>📋 Plan d'Action</h3>
+            </div>
+            <div id="improvementPlan" style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pro-tab-btn {
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        color: var(--text-secondary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 8px;
+    }
+
+    .pro-tab-btn:hover {
+        background: var(--bg-tertiary);
+    }
+
+    .pro-tab-btn.active {
+        color: var(--primary);
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .so-drop.drag-over {
+        border-color: var(--primary) !important;
+        background: rgba(99, 102, 241, 0.05) !important;
+    }
+
+    .skill-tag {
+        padding: 6px 12px;
+        background: #f1f5f9;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #475569;
+    }
+
+    .dark-mode .skill-tag {
+        background: #334155;
+        color: #cbd5e1;
+    }
+
+    /* Score Global card improvements */
+    .pro-side-widgets {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 320px;
+    }
+
+    .user-quick-card {
+        background: linear-gradient(135deg, #6366f1 0%, #6d3df8 50%, #7b61ff 100%);
+        color: white;
+        border-radius: 14px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.12);
+    }
+
+    .user-quick-card .qr-header {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .user-quick-card .qr-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .qr-avatar {
+        min-width: 96px;
+        min-height: 96px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 900;
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+    }
+
+    .qr-stats {
+        display: flex;
+        gap: 18px;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 6px;
+    }
+
+    .qr-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .qr-stat .val {
+        font-size: 28px;
+        font-weight: 900;
+        color: white;
+    }
+
+    .qr-stat .lab {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .pro-btn-outline.full {
+        display: block;
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+        .pro-side-widgets {
+            width: 100%;
+        }
+
+        .pro-grid-main {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Smaller analyze CTA */
+    #btn-analyze {
+        display: inline-block;
+        padding: 10px 18px;
+        font-size: 15px;
+        border-radius: 10px;
+        width: auto;
+        max-width: 420px;
+        align-self: center;
+    }
+
+    @media (max-width: 700px) {
+        #btn-analyze {
+            padding: 10px 14px;
+            font-size: 14px;
+            width: 100%;
+        }
+    }
+
+    .skill-tag.match {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .skill-tag.missing {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+</style>
+
+<script>
+    // Tab switching logic
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-section').forEach(s => s.style.display = 'none');
+        document.querySelectorAll('.pro-tab-btn').forEach(b => b.classList.remove('active'));
+
+        document.getElementById('section-' + tab).style.display = 'block';
+        document.getElementById('tab-' + tab).classList.add('active');
+
+        // Hide relative results if switching to generation
+        if (tab === 'generation') {
+            document.getElementById('resultsPanel').style.display = 'none';
+            document.getElementById('detailSection').style.display = 'none';
+        }
+    }
+
+    // File Upload Handler
+    const dropZone = document.getElementById('cv-drop-zone');
+    const fileInput = document.getElementById('cv-file-input');
+    const fileText = document.getElementById('cv-file-text');
+
+    if (dropZone && fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) fileText.textContent = e.target.files[0].name;
+        });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileText.textContent = e.dataTransfer.files[0].name;
+            }
+        });
+    }
+
+    async function analyzeCompatibilityV3() {
+        const jobText = document.getElementById('jobOfferText').value.trim();
+        const file = fileInput.files[0];
+        const btn = document.getElementById('btn-analyze');
+
+        if (!jobText || !file) {
+            alert("⚠️ Veuillez fournir l'offre ET votre CV.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "⏳ Analyse Cognitive...";
+
+        const formData = new FormData();
+        formData.append('pdf_file', file);
+        formData.append('job_offer', jobText);
+
+        try {
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showAnalysisResults(data);
+            } else {
+                const msg = data.details ? `❌ ${data.error} : ${data.details}` : `❌ Erreur: ${data.error}`;
+                alert(msg);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ Une erreur technique est survenue.");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Lancer l'Analyse Cognitive";
+        }
+    }
+
+    function showAnalysisResults(data) {
+        document.getElementById('resultsPanel').style.display = 'block';
+        document.getElementById('detailSection').style.display = 'block';
+
+        document.getElementById('scoreAvatar').textContent = data.final_score + '%';
+        document.getElementById('matchScore').textContent = data.final_score + '%';
+        document.getElementById('skillMatch').textContent = (data.skill_match_score || data.match_percentage) + '%';
+        document.getElementById('recsBox').textContent = data.recommendation;
+
+        const matchBox = document.getElementById('matchingSkills');
+        const missBox = document.getElementById('missingSkills');
+
+        matchBox.innerHTML = (data.matching_skills || []).map(s => `<span class="skill-tag match">${s}</span>`).join('');
+        missBox.innerHTML = (data.missing_skills || []).map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+        document.getElementById('improvementPlan').textContent = data.improvement_plan || "Continuez vos efforts !";
+
+        // Scroll to results
+        document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function generateOfferV3() {
+        const title = document.getElementById('gen-job-title').value.trim();
+        const company = document.getElementById('gen-company').value.trim();
+        const skillsString = document.getElementById('gen-skills').value.trim();
+        const btn = document.getElementById('btn-generate');
+        const resultContainer = document.getElementById('gen-result-container');
+        const resultText = document.getElementById('gen-result-text');
+
+        if (!title || !company || !skillsString) {
+            alert("⚠️ Veuillez remplir tous les champs.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "⏳ Génération en cours...";
+
+        try {
+            const response = await fetch('/api/generate-job-offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    job_title: title,
+                    company: company,
+                    skills: skillsString.split(',').map(s => s.trim()),
+                    experience_level: 'Senior'
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                resultContainer.style.display = 'block';
+                // Result from Gemini might be an object with title, desc, etc or just text
+                const offer = data.offer;
+                resultText.innerHTML = `
+                    <strong>${offer.title || title}</strong><br>
+                    <em>${offer.company || company} - ${offer.location || 'Remote'}</em><br><br>
+                    ${offer.description || offer.content || 'Offre générée avec succès.'}
+                `;
+            } else {
+                alert("❌ Erreur: " + data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ Erreur lors de la génération.");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Générer l'Offre avec Gemini";
+        }
+    }
+
+    function copyGenOffer() {
+        const text = document.getElementById('gen-result-text').innerText;
+        navigator.clipboard.writeText(text).then(() => alert("Copié !"));
+    }
+</script>
+
+<!-- Hidden Premium Job Card for Image Generation -->
+<div id="premium-job-card"
+    style="position: absolute; left: -9999px; top: -9999px; width: 600px; padding: 40px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border-radius: 24px; font-family: 'Inter', sans-serif; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden;">
+    <div
+        style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);">
+    </div>
+    <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; position: relative; z-index: 1;">
+        <div>
+            <div
+                style="background: var(--primary); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 15px;">
+                JM</div>
+            <h1 id="card-title"
+                style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;">Poste
+            </h1>
+            <p id="card-company" style="margin: 5px 0 0; font-size: 18px; color: #94a3b8; font-weight: 500;">Entreprise
+            </p>
+        </div>
+        <div
+            style="background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+            Offre Exclusive</div>
+    </div>
+
+    <div id="card-body"
+        style="margin-top: 30px; font-size: 14px; line-height: 1.6; color: #cbd5e1; position: relative; z-index: 1;">
+        <!-- Contenu injecté -->
+    </div>
+
+    <div
+        style="margin-top: 40px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1;">
+        <div style="font-size: 12px; color: #64748b;">Généré par <strong>JobMatch AI</strong></div>
+        <div style="display: flex; gap: 8px;">
+            <span style="width: 8px; height: 8px; background: #6366f1; border-radius: 50%;"></span>
+            <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></span>
+            <span style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%;"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<script>
+    // New Multimodal Functions
+    async function handleJobImageUpload(input) {
+        if (!input.files || !input.files[0]) return;
+
+        const file = input.files[0];
+        const textArea = document.getElementById('jobOfferText');
+        const originalPlaceholder = textArea.placeholder;
+
+        textArea.disabled = true;
+        textArea.placeholder = "⏳ L'IA Vision analyse votre image...";
+        textArea.value = "";
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch('/api/extract-job-from-image', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                textArea.value = data.text;
+                showToast("✅ Texte extrait avec succès !", "success");
+            } else {
+                alert("❌ Erreur vision: " + data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ Erreur de connexion au service vision.");
+        } finally {
+            textArea.disabled = false;
+            textArea.placeholder = originalPlaceholder;
+            input.value = ""; // Clear input
+        }
+    }
+
+    async function generateOfferAsImage() {
+        const title = document.getElementById('gen-job-title').value.trim();
+        const company = document.getElementById('gen-company').value.trim();
+        const skillsString = document.getElementById('gen-skills').value.trim();
+        const btn = document.getElementById('btn-generate-image');
+
+        if (!title || !company || !skillsString) {
+            alert("⚠️ Veuillez remplir tous les champs.");
+            return;
+        }
+
+        btn.disabled = true;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = "<i class='fas fa-circle-notch fa-spin'></i> Création...";
+
+        try {
+            // 1. Generate text first if not already done or just to be sure
+            const response = await fetch('/api/generate-job-offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    job_title: title,
+                    company: company,
+                    skills: skillsString.split(',').map(s => s.trim()),
+                    experience_level: 'Senior'
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                const offer = data.offer;
+
+                // 2. Inject into hidden card
+                document.getElementById('card-title').textContent = offer.title || title;
+                document.getElementById('card-company').textContent = `${offer.company || company} • ${offer.location || 'Remote'}`;
+
+                const bodyHtml = `
+<div style="margin-bottom: 20px;">${offer.description || offer.content}</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+    <div>
+        <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 13px; text-transform: uppercase;">Compétences
+        </h4>
+        <ul style="padding-left: 15px; margin: 0; font-size: 12px;">
+            ${(offer.requirements || []).slice(0, 5).map(r => `<li>${r}</li>`).join('')}
+        </ul>
+    </div>
+    <div>
+        <h4 style="color: #10b981; margin-bottom: 8px; font-size: 13px; text-transform: uppercase;">Avantages</h4>
+        <ul style="padding-left: 15px; margin: 0; font-size: 12px;">
+            ${(offer.benefits || ['Télétravail', 'Mutuelle', 'Primes']).slice(0, 5).map(b => `<li>${b}</li>`).join('')}
+        </ul>
+    </div>
+</div>
+`;
+                document.getElementById('card-body').innerHTML = bodyHtml;
+
+                // 3. Render and Download
+                const card = document.getElementById('premium-job-card');
+                html2canvas(card, {
+                    backgroundColor: null,
+                    scale: 2, // High res
+                    useCORS: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `JobMatch_Offer_${title.replace(/\s+/g, '_')}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                    showToast("✅ Image exportée !", "success");
+                });
+            } else {
+                alert("❌ Erreur génération: " + data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ Échec de la génération visuelle.");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        }
+    }
+
+    function showToast(msg, type) {
+        // Basic toast fallback if not defined globally
+        console.log(`Toast [${type}]: ${msg}`);
+        alert(msg);
+    }
+
+    // Generate test job offer for compatibility analysis
+    async function generateTestJobOfferForAnalysis() {
+        const jobTextArea = document.getElementById('jobOfferText');
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Génération...";
+
+        try {
+            const response = await fetch('/api/generate-test-job-offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                jobTextArea.value = data.job_offer;
+                jobTextArea.style.transition = 'all 0.3s ease';
+                jobTextArea.style.background = 'rgba(52, 152, 219, 0.1)';
+                setTimeout(() => {
+                    jobTextArea.style.background = '';
+                }, 1000);
+            } else {
+                alert(`❌ Erreur: ${data.error}`);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ Erreur lors de la génération.");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+
+    function saveOffer() {
+        const jobText = document.getElementById('jobOfferText').value.trim();
+        const matchScore = document.getElementById('matchScore').textContent;
+
+        if (!jobText || matchScore === '--') {
+            alert('⚠️ Veuillez d\'abord analyser une offre d\'emploi');
+            return;
+        }
+
+        // Extract job details from the offer text (title and company)
+        const lines = jobText.split('\n').filter(l => l.trim());
+        let title = 'Offre analysée';
+        let company = 'Entreprise';
+
+        // Try to extract title and company from first lines
+        if (lines[0]) title = lines[0].substring(0, 100);
+        if (lines[1]) company = lines[1].substring(0, 100);
+
+        // Call API to save
+        saveJobToDB({
+            title: title,
+            company: company,
+            location: 'À déterminer',
+            salary: 'À négocier',
+            description: jobText,
+            contract_type: 'CDI'
+        });
+    }
+
+    async function saveJobToDB(jobData) {
+        try {
+            const response = await fetch('/api/save-offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jobData)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showToast('✅ Offre sauvegardée avec succès !', 'success');
+            } else {
+                alert('❌ Erreur: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('❌ Erreur lors de la sauvegarde');
+        }
+    }
+</script>
+{% endblock %}

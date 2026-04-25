@@ -1,0 +1,324 @@
+{% extends "base_v3.html" %}
+
+{% block title %}JobMatch - Résultat d'Analyse{% endblock %}
+{% block page_title %}Résultat d'Analyse{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --dash-primary: #6366f1;
+        --dash-secondary: #8b5cf6;
+        --dash-accent: #f43f5e;
+        --dash-bg: var(--bg-primary);
+        --dash-glass: rgba(255, 255, 255, 0.03);
+        --dash-border: rgba(255, 255, 255, 0.08);
+        --dash-card-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode {
+        --dash-glass: rgba(15, 23, 42, 0.6);
+        --dash-border: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Ambient Aurora Background */
+    .sa-aurora {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .sa-aurora-blob {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, var(--dash-primary) 0%, transparent 70%);
+        filter: blur(120px);
+        border-radius: 50%;
+        animation: aurora-move 20s infinite alternate;
+    }
+
+    .sa-aurora-blob:nth-child(2) {
+        background: radial-gradient(circle, var(--dash-secondary) 0%, transparent 70%);
+        width: 500px;
+        height: 500px;
+        right: -100px;
+        top: 10%;
+        animation-duration: 25s;
+        animation-delay: -5s;
+    }
+
+    .sa-aurora-blob:nth-child(3) {
+        background: radial-gradient(circle, var(--dash-accent) 0%, transparent 70%);
+        width: 400px;
+        height: 400px;
+        left: 10%;
+        bottom: -100px;
+        animation-duration: 18s;
+        animation-delay: -2s;
+    }
+
+    @keyframes aurora-move {
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(100px, 50px) scale(1.1);
+        }
+
+        100% {
+            transform: translate(-50px, 100px) scale(0.9);
+        }
+    }
+
+    .pro-dashboard-wrap {
+        position: relative;
+        padding: 20px 0 60px 0;
+    }
+
+    .card-v4 {
+        background: var(--dash-glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--dash-border);
+        border-radius: 20px;
+        padding: 32px;
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .score-circle {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: conic-gradient(var(--dash-primary) {
+                    {
+                    analysis.final_score
+                }
+            }
+
+            %, rgba(255, 255, 255, 0.05) 0);
+        margin: 0 auto;
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+    }
+
+    .score-inner {
+        width: 130px;
+        height: 130px;
+        background: var(--bg-primary);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+
+    .score-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1;
+    }
+
+    .score-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-primary);
+    }
+
+    .keyword-pill {
+        display: inline-block;
+        padding: 8px 16px;
+        background: rgba(244, 63, 94, 0.1);
+        color: #f43f5e;
+        border: 1px solid rgba(244, 63, 94, 0.2);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0 8px 8px 0;
+    }
+
+    .insight-box {
+        background: rgba(99, 102, 241, 0.05);
+        border-left: 4px solid var(--dash-primary);
+        padding: 20px;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+        border: 1px solid var(--dash-border);
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+    }
+
+    .back-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .fade-in {
+        animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @media (max-width: 768px) {
+        .score-circle {
+            width: 120px;
+            height: 120px;
+        }
+        .score-inner {
+            width: 105px;
+            height: 105px;
+        }
+        .score-value {
+            font-size: 1.8rem;
+        }
+        .card-v4 {
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<!-- Aurora Ambient Background -->
+<div class="sa-aurora">
+    <div class="sa-aurora-blob"></div>
+    <div class="sa-aurora-blob"></div>
+    <div class="sa-aurora-blob"></div>
+</div>
+
+<div class="pro-dashboard-wrap fade-in">
+    <a href="{{ url_for('dashboard') }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Retour au Dashboard
+    </a>
+
+    <div class="card-v4" style="text-align: center;">
+        <h1
+            style="font-size: 2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(135deg, var(--text-primary), var(--text-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Analyse d'Adéquation
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px;">Rapport généré le {{
+            analysis.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+
+        <div class="score-circle">
+            <div class="score-inner">
+                <span class="score-value">{{ analysis.final_score|int }}%</span>
+                <span class="score-label">Score Global</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div class="card-v4">
+            <h2 class="section-title"><i class="fas fa-info-circle" style="color: var(--dash-primary);"></i>
+                Informations Générales</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div
+                    style="display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--dash-border);">
+                    <span style="color: var(--text-muted);">Poste visé</span>
+                    <span style="font-weight: 600;">{{ analysis.job_title if analysis.job_title else 'Analyse générale'
+                        }}</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--dash-border);">
+                    <span style="color: var(--text-muted);">Fichier CV</span>
+                    <span style="font-weight: 600;">{{ analysis.filename }}</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--dash-border);">
+                    <span style="color: var(--text-muted);">Moteur d'analyse</span>
+                    <span style="font-weight: 600; color: var(--dash-secondary);"><i class="fas fa-magic"></i> Gemini AI
+                        Core</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-v4">
+            <h2 class="section-title"><i class="fas fa-times-circle" style="color: var(--dash-accent);"></i> Mots-clés
+                Manquants</h2>
+            {% if missing_keywords %}
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Ces compétences ou termes sont absents de votre CV
+                mais présents dans l'offre :</p>
+            <div>
+                {% for kw in missing_keywords %}
+                <span class="keyword-pill">{{ kw }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div
+                style="text-align: center; padding: 30px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; color: #10b981;">
+                <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <p style="font-weight: 600; margin: 0;">Excellent ! Aucun mot-clé manquant majeur n'a été détecté.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card-v4">
+        <h2 class="section-title"><i class="fas fa-lightbulb" style="color: #f59e0b;"></i> Recommandations de l'IA</h2>
+        {% if analysis.recommendation %}
+        <div class="insight-box">
+            {{ analysis.recommendation|safe }}
+        </div>
+        {% else %}
+        <p style="color: var(--text-muted);">Aucune recommandation détaillée n'est disponible pour cette analyse.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

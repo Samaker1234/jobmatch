@@ -1,0 +1,366 @@
+{% extends "base_v3.html" %}
+
+{% block page_title %}Mes Candidatures
+{% endblock %}
+
+{% block content %}
+<div class="pro-metric-grid">
+    <div class="metric-card-pro highlight">
+        <div class="metric-header">
+            <span class="metric-title">Candidatures Soumises</span>
+            <span class="trend-pro pos" id="applied-count">0</span>
+        </div>
+        <div class="metric-value" id="applied-value">0</div>
+        <div class="metric-footer">Cette année</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Offres Sauvegardées</span>
+        </div>
+        <div class="metric-value" id="saved-count">0</div>
+        <div class="metric-footer">À traiter</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Offres Rejetées</span>
+        </div>
+        <div class="metric-value" id="rejected-count">0</div>
+        <div class="metric-footer">Non intéressé</div>
+    </div>
+</div>
+
+<!-- Table des candidatures -->
+<div class="pro-card table-section">
+    <div class="card-head">
+        <h3>📂 Registre des Candidatures</h3>
+        <div class="search-table-wrapper">
+            <input type="text" id="offerSearchInput" placeholder="Filtrer les résultats..."
+                oninput="filterApplications()">
+        </div>
+    </div>
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th>Poste / Entreprise</th>
+                    <th>Date de Candidature</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="applications-table-body">
+                <!-- Rempli dynamiquement par JavaScript -->
+                <tr style="text-align: center; color: var(--text-secondary);">
+                    <td colspan="4" style="padding: 40px;">⏳ Chargement des candidatures...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="pro-bottom-grid">
+    <div class="pro-card insights-card">
+        <div class="card-head">
+            <h3>📊 Tendances</h3>
+        </div>
+        <div class="skills-list">
+            <div class="skill-item">
+                <span class="skill-name">Candidatures/Mois</span>
+                <span class="skill-bar">
+                    <span class="skill-fill" style="width: 65%"></span>
+                </span>
+                <span class="skill-pct">6.5</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name">Taux de Réponse</span>
+                <span class="skill-bar">
+                    <span class="skill-fill" style="width: 42%"></span>
+                </span>
+                <span class="skill-pct">42%</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name">Entretiens Programmés</span>
+                <span class="skill-bar">
+                    <span class="skill-fill" style="width: 28%"></span>
+                </span>
+                <span class="skill-pct">28%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="pro-card insights-card">
+        <div class="card-head">
+            <h3>🎯 Top Secteurs</h3>
+        </div>
+        <div class="job-alerts">
+            <div class="job-alert-item">
+                <div class="job-alert-header">
+                    <span class="job-title">Intelligence Artificielle</span>
+                    <span class="match-badge high">8 offres</span>
+                </div>
+                <div class="job-alert-meta">
+                    <span>Candidatures: 5</span>
+                    <span class="salary">62% de succès</span>
+                </div>
+            </div>
+            <div class="job-alert-item">
+                <div class="job-alert-header">
+                    <span class="job-title">Data Science</span>
+                    <span class="match-badge medium">6 offres</span>
+                </div>
+                <div class="job-alert-meta">
+                    <span>Candidatures: 4</span>
+                    <span class="salary">50% de succès</span>
+                </div>
+            </div>
+            <div class="job-alert-item">
+                <div class="job-alert-header">
+                    <span class="job-title">Cloud Computing</span>
+                    <span class="match-badge medium">4 offres</span>
+                </div>
+                <div class="job-alert-meta">
+                    <span>Candidatures: 3</span>
+                    <span class="salary">33% de succès</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pro-card insights-card">
+        <div class="card-head">
+            <h3>🌍 Top Entreprises</h3>
+        </div>
+        <div class="recommendations-list">
+            <div class="rec-item">
+                <span class="rec-icon">🔵</span>
+                <div class="rec-content">
+                    <p class="rec-title">Google</p>
+                    <span class="rec-desc">3 candidatures • 1 entretien</span>
+                </div>
+                <span class="rec-arrow">→</span>
+            </div>
+            <div class="rec-item">
+                <span class="rec-icon">🟣</span>
+                <div class="rec-content">
+                    <p class="rec-title">OpenAI</p>
+                    <span class="rec-desc">2 candidatures • 1 entretien</span>
+                </div>
+                <span class="rec-arrow">→</span>
+            </div>
+            <div class="rec-item">
+                <span class="rec-icon">🟠</span>
+                <div class="rec-content">
+                    <p class="rec-title">Meta</p>
+                    <span class="rec-desc">2 candidatures • Discussion</span>
+                </div>
+                <span class="rec-arrow">→</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div id="applicationDetailsModal"
+    style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 10000; backdrop-filter: blur(3px);"
+    onclick="closeDetailsModal()">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); border-radius: 16px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5);"
+        onclick="event.stopPropagation()">
+        <div
+            style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 id="modal-title" style="margin: 0; font-size: 20px; color: var(--text-primary);"></h2>
+                <p id="modal-company" style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 14px;"></p>
+            </div>
+            <button onclick="closeDetailsModal()"
+                style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary);">✕</button>
+        </div>
+        <div style="padding: 24px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                <div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Date de Candidature
+                    </div>
+                    <div id="modal-date" style="font-weight: 600; color: var(--text-primary);"></div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Statut</div>
+                    <div id="modal-statut"></div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Score</div>
+                    <div id="modal-score"></div>
+                </div>
+            </div>
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; font-weight: 600;">📋
+                    Description du poste</h3>
+                <p id="modal-description" style="color: var(--text-secondary); line-height: 1.6; margin: 0;"></p>
+            </div>
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 14px; color: var(--text-primary); margin-bottom: 12px; font-weight: 600;">🛠️
+                    Compétences requises</h3>
+                <div id="modal-competences" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 12px;">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">📧 Contact</div>
+                <div id="modal-contact" style="font-weight: 500; color: var(--text-primary);"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/my_offers_modal.js"></script>
+<script src="/static/js/applications.js"></script>
+
+<script>
+    // Initialize applications on page load
+    document.addEventListener('DOMContentLoaded', async function () {
+        try {
+            const response = await fetch('/api/get-applications');
+            const data = await response.json();
+
+            if (data.success && data.applications) {
+                displayOffersTable(data.applications);
+                updateOffersStatistics(data.applications);
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            showToast('Erreur lors du chargement des candidatures', 'error');
+        }
+    });
+
+    // Display applications in table
+    function displayOffersTable(applications) {
+        const tbody = document.getElementById('applications-table-body');
+
+        if (!applications || applications.length === 0) {
+            tbody.innerHTML = `
+            <tr style="text-align: center; color: var(--text-secondary);">
+                <td colspan="4" style="padding: 40px;">
+                    📭 Aucune candidature pour le moment
+                    <br><small>Sauvegardez des offres depuis l'analyseur d'offres</small>
+                </td>
+            </tr>`;
+            return;
+        }
+
+        tbody.innerHTML = applications.map(app => `
+        <tr>
+            <td>
+                <div class="td-main">${app.title}</div>
+                <div class="td-sub">${app.company}</div>
+            </td>
+            <td>${app.date}</td>
+            <td>
+                <select onchange="updateStatus(${app.id}, this.value)" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer;">
+                    <option value="saved" ${app.status === 'saved' ? 'selected' : ''}>📌 Sauvegardée</option>
+                    <option value="applied" ${app.status === 'applied' ? 'selected' : ''}>✅ Appliquée</option>
+                    <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>❌ Rejetée</option>
+                </select>
+            </td>
+            <td style="text-align: center;">
+                <button class="tbl-action" onclick='showApplicationDetails(${JSON.stringify(app).replace(/'/g, "&#39;")})' style="background: var(--dash-primary); color: white; border: none; padding: 6px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-right: 8px;">Détails</button>
+                <button class="tbl-action" onclick="deleteOffer(${app.id})" style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 14px;">🗑️</button>
+            </td>
+        </tr>
+    `).join('');
+    }
+
+    // Update statistics
+    function updateOffersStatistics(applications) {
+        const stats = { applied: 0, saved: 0, rejected: 0 };
+        applications.forEach(app => stats[app.status]++);
+
+        document.getElementById('applied-value').textContent = stats.applied;
+        document.getElementById('applied-count').textContent = stats.applied > 0 ? '+' + stats.applied : stats.applied;
+        document.getElementById('saved-count').textContent = stats.saved;
+        document.getElementById('rejected-count').textContent = stats.rejected;
+    }
+
+    // Update status
+    async function updateStatus(appId, newStatus) {
+        try {
+            const response = await fetch('/api/update-application-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: appId, status: newStatus })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showToast('Statut mis à jour ✓', 'success');
+                const resp = await fetch('/api/get-applications');
+                const result = await resp.json();
+                if (result.success) {
+                    displayOffersTable(result.applications);
+                    updateOffersStatistics(result.applications);
+                }
+            }
+        } catch (error) {
+            showToast('Erreur lors de la mise à jour', 'error');
+        }
+    }
+
+    // Delete offer
+    async function deleteOffer(appId) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')) return;
+
+        try {
+            const response = await fetch('/api/delete-application', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: appId })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showToast('Candidature supprimée ✓', 'success');
+                const resp = await fetch('/api/get-applications');
+                const result = await resp.json();
+                if (result.success) {
+                    displayOffersTable(result.applications);
+                    updateOffersStatistics(result.applications);
+                }
+            }
+        } catch (error) {
+            showToast('Erreur lors de la suppression', 'error');
+        }
+    }
+
+    // Filter applications search
+    function filterApplications() {
+        const query = document.getElementById('offerSearchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('#applications-table-body tr');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            // Skip the "no results" or "loading" rows
+            if (row.id === 'noResultsRow' || row.cells.length < 2) return;
+
+            const text = row.textContent.toLowerCase();
+            if (text.includes(query)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        const tbody = document.getElementById('applications-table-body');
+        let existingNoResults = document.getElementById('noResultsRow');
+
+        if (visibleCount === 0 && query !== '') {
+            if (!existingNoResults) {
+                existingNoResults = document.createElement('tr');
+                existingNoResults.id = 'noResultsRow';
+                existingNoResults.innerHTML = `<td colspan="4" style="text-align: center; padding: 40px; color: var(--text-secondary);">Aucun résultat pour cette recherche.</td>`;
+                tbody.appendChild(existingNoResults);
+            }
+        } else if (existingNoResults) {
+            existingNoResults.remove();
+        }
+    }
+</script>
+
+
+{% endblock %}

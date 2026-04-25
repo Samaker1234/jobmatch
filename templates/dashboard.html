@@ -1,0 +1,944 @@
+{% extends "base_v3.html" %}
+
+{% block title %}JobMatch - Dashboard Console{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --dash-primary: #6366f1;
+        --dash-secondary: #8b5cf6;
+        --dash-accent: #f43f5e;
+        --dash-bg: var(--bg-primary);
+        --dash-glass: rgba(255, 255, 255, 0.03);
+        --dash-border: rgba(255, 255, 255, 0.08);
+        --dash-card-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode {
+        --dash-glass: rgba(15, 23, 42, 0.6);
+        --dash-border: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Ambient Aurora Background */
+    .sa-aurora {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .sa-aurora-blob {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, var(--dash-primary) 0%, transparent 70%);
+        filter: blur(120px);
+        border-radius: 50%;
+        animation: aurora-move 20s infinite alternate;
+    }
+
+    .sa-aurora-blob:nth-child(2) {
+        background: radial-gradient(circle, var(--dash-secondary) 0%, transparent 70%);
+        width: 500px;
+        height: 500px;
+        right: -100px;
+        top: 10%;
+        animation-duration: 25s;
+        animation-delay: -5s;
+    }
+
+    .sa-aurora-blob:nth-child(3) {
+        background: radial-gradient(circle, var(--dash-accent) 0%, transparent 70%);
+        width: 400px;
+        height: 400px;
+        left: 10%;
+        bottom: -100px;
+        animation-duration: 18s;
+        animation-delay: -2s;
+    }
+
+    @keyframes aurora-move {
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(100px, 50px) scale(1.1);
+        }
+
+        100% {
+            transform: translate(-50px, 100px) scale(0.9);
+        }
+    }
+
+    /* Containers */
+    .pro-dashboard-wrap {
+        position: relative;
+        padding: 20px 0 60px 0;
+    }
+
+    .pro-greeting {
+        margin-bottom: 32px;
+        animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pro-greeting h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+    }
+
+    .pro-greeting p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+    }
+
+    /* KPI Grid */
+    .kpi-grid-premium {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .kpi-card-v4 {
+        background: var(--dash-glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--dash-border);
+        border-radius: 24px;
+        padding: 32px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .kpi-card-v4:hover {
+        transform: translateY(-8px);
+        border-color: var(--dash-primary);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .kpi-card-v4.highlight {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.25);
+    }
+
+    .kpi-card-v4.highlight .kpi-label,
+    .kpi-card-v4.highlight .kpi-val,
+    .kpi-card-v4.highlight .kpi-foot {
+        color: white;
+    }
+
+    .kpi-icon-box {
+        width: 48px;
+        height: 48px;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 20px;
+        color: var(--dash-primary);
+    }
+
+    .kpi-card-v4.highlight .kpi-icon-box {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .kpi-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .kpi-val {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .kpi-foot {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: block;
+    }
+
+    /* Distribution & Charts */
+    .grid-v4 {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .card-v4 {
+        background: var(--dash-glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--dash-border);
+        border-radius: 20px;
+        padding: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .card-v4:hover {
+        box-shadow: var(--dash-card-shadow);
+    }
+
+    .card-head-v4 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .card-head-v4 h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Registry Table */
+    .registry-v4 {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+    }
+
+    .registry-v4 th {
+        padding: 0 16px 8px 16px;
+        text-align: left;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .registry-row-v4 {
+        background: rgba(255, 255, 255, 0.02);
+        transition: all 0.3s ease;
+    }
+
+    .registry-row-v4:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: scale(1.01);
+    }
+
+    .registry-v4 td {
+        padding: 16px;
+        border-top: 1px solid var(--dash-border);
+        border-bottom: 1px solid var(--dash-border);
+    }
+
+    .registry-v4 td:first-child {
+        border-left: 1px solid var(--dash-border);
+        border-radius: 16px 0 0 16px;
+    }
+
+    .registry-v4 td:last-child {
+        border-right: 1px solid var(--dash-border);
+        border-radius: 0 16px 16px 0;
+    }
+
+    .score-pill {
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: inline-block;
+    }
+
+    .score-pill.high {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+    }
+
+    .score-pill.med {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+    }
+
+    .score-pill.low {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+
+    .status-pill {
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @media (max-width: 1024px) {
+        .grid-v4 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Modal Styles for Candidacy Update */
+    .cv-modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cv-modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .cv-modal {
+        background: var(--bg-secondary, #1e293b);
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        border-radius: 20px;
+        padding: 32px;
+        width: 100%;
+        max-width: 460px;
+        text-align: center;
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .cv-modal-overlay.active .cv-modal {
+        transform: scale(1) translateY(0);
+    }
+
+    .cv-modal-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .cv-modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary, #f1f5f9);
+        margin-bottom: 8px;
+    }
+
+    .cv-modal-desc {
+        font-size: 14px;
+        color: var(--text-muted, #64748b);
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .cv-modal-input {
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(255,255,255,0.05);
+        border: 1.5px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        font-size: 14px;
+        color: var(--text-primary, #f1f5f9);
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .cv-modal-input:focus {
+        outline: none;
+        border-color: var(--dash-primary, #6366f1);
+        background: rgba(99,102,241,0.05);
+    }
+
+    .cv-modal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .cv-modal-btn {
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .cv-modal-btn.cancel {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-muted, #94a3b8);
+    }
+
+    .cv-modal-btn.cancel:hover {
+        background: rgba(255,255,255,0.1);
+    }
+
+    .cv-modal-btn.primary {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+    }
+
+    .cv-modal-btn.primary:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    /* Candidacy Status Pills */
+    .cand-pill {
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .cand-pill.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .cand-pill.submitted { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .cand-pill.won { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .cand-pill.lost { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+    /* Candidacy Action Buttons */
+    .cand-action-btn {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .cand-action-btn.submit { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .cand-action-btn.submit:hover { background: #3b82f6; color: white; }
+    
+    .cand-action-btn.won { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .cand-action-btn.won:hover { background: #10b981; color: white; }
+    
+    .cand-action-btn.lost { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    .cand-action-btn.lost:hover { background: #ef4444; color: white; }
+    
+    .cand-action-btn.del { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
+    .cand-action-btn.del:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+</style>
+
+<!-- Aurora Ambient Background -->
+<div class="sa-aurora">
+    <div class="sa-aurora-blob"></div>
+    <div class="sa-aurora-blob"></div>
+    <div class="sa-aurora-blob"></div>
+</div>
+
+<!-- Global Loading State -->
+<div id="dashboard-loading" style="text-align: center; padding: 120px 20px;">
+    <div style="font-size: 3rem; color: var(--dash-primary); margin-bottom: 20px;">
+        <i class="fas fa-circle-notch fa-spin"></i>
+    </div>
+    <p style="color: var(--text-secondary); font-size: 1.1rem; font-weight: 500;">Calcul de vos performances IA...</p>
+</div>
+
+<!-- Dashboard Content Wrapper -->
+<div id="dashboard-content" style="display: none;" class="pro-dashboard-wrap">
+
+    <!-- Greeting Header -->
+    <div class="pro-greeting">
+        <h1>Bonjour, <span id="user-display-name">Utilisateur</span> ✨</h1>
+        <p>Analyse en temps réel de votre profil et de vos candidatures.</p>
+    </div>
+
+    <!-- 1. KPI Cards Grid -->
+    <div class="kpi-grid-premium">
+        <div class="kpi-card-v4 highlight">
+            <div class="kpi-icon-box"><i class="fas fa-chart-line"></i></div>
+            <span class="kpi-label">Score Global</span>
+            <div class="kpi-val" id="v3-avg-score">0%</div>
+            <span class="kpi-foot" id="improvement-badge">Calcul...</span>
+        </div>
+
+        <div class="kpi-card-v4">
+            <div class="kpi-icon-box" style="color: #10b981; background: rgba(16,185,129,0.1);"><i class="fas fa-check-double"></i></div>
+            <span class="kpi-label">Taux de Succès</span>
+            <div class="kpi-val" id="v3-success-rate">0%</div>
+            <span class="kpi-foot">Candidatures acceptées</span>
+        </div>
+
+        <div class="kpi-card-v4">
+            <div class="kpi-icon-box"><i class="fas fa-bullseye"></i></div>
+            <span class="kpi-label">Match Maximal</span>
+            <div class="kpi-val" id="v3-best-score">0%</div>
+            <span class="kpi-foot">Meilleure adéquation</span>
+        </div>
+
+        <div class="kpi-card-v4">
+            <div class="kpi-icon-box"><i class="fas fa-microchip"></i></div>
+            <span class="kpi-label">Analyses</span>
+            <div class="kpi-val" id="v3-total-analyses">0</div>
+            <span class="kpi-foot">Volume ce mois-ci</span>
+        </div>
+    </div>
+
+    <!-- 2. Charts & Insights Grid -->
+    <div class="grid-v4">
+        <!-- Main Chart -->
+        <div class="card-v4">
+            <div class="card-head-v4">
+                <h3><i class="fas fa-wave-square" style="color: var(--dash-primary);"></i> Analyse Temporelle</h3>
+                <div class="card-controls">
+                    <button class="filter-btn active"
+                        style="padding: 6px 12px; border-radius: 8px; border: none; background: var(--dash-primary); color: white; font-weight: 600;">Semaine</button>
+                </div>
+            </div>
+            <div id="v3-main-chart-apex" style="height: 320px;"></div>
+        </div>
+
+        <!-- Sidebar Widgets -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="card-v4">
+                <div class="card-head-v4">
+                    <h3><i class="fas fa-chart-pie" style="color: var(--dash-secondary);"></i> Distribution</h3>
+                </div>
+                <div id="v3-dist-chart-apex" style="height: 250px;"></div>
+            </div>
+
+            <div class="card-v4">
+                <div class="card-head-v4">
+                    <h3><i class="fas fa-magic" style="color: var(--warning);"></i> Suggestions Profil</h3>
+                </div>
+                <div class="recommendations-list" id="v3-recommendations-list">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Unified Candidacies Table -->
+    <div class="card-v4">
+        <div class="card-head-v4">
+            <h3><i class="fas fa-briefcase" style="color: var(--dash-primary);"></i> Mes Candidatures <span id="cand-count-badge" style="font-size: 0.75rem; background: rgba(99,102,241,0.2); color: var(--dash-primary); padding: 3px 10px; border-radius: 20px; margin-left: 8px;">0</span></h3>
+            <div class="card-controls" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="candSearchInput" placeholder="🔍 Filtrer..." oninput="filterCandidacies()" style="padding: 8px 14px; border-radius: 10px; border: 1px solid var(--dash-border); background: rgba(255,255,255,0.05); color: var(--text-primary); outline: none; font-size: 0.85rem; min-width: 180px;">
+                <button onclick="location.href='/cv-improver'" style="background: linear-gradient(135deg, var(--dash-primary), #4f46e5); border: none; color: white; padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; white-space: nowrap;">✨ Optimiser un CV</button>
+            </div>
+        </div>
+        <div class="pro-table-wrapper" style="overflow-x: auto;">
+            <table class="registry-v4">
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Poste Ciblé</th>
+                        <th>Score IA</th>
+                        <th>Statut</th>
+                        <th>Date</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="candidacies-table-body">
+                    <tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-muted);"><i class="fas fa-circle-notch fa-spin"></i> Chargement...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Submit to Company Modal -->
+    <div class="cv-modal-overlay" id="submitCandModal">
+        <div class="cv-modal">
+            <div class="cv-modal-icon" style="background: rgba(16,185,129,0.1);">
+                <i class="fas fa-paper-plane" style="font-size: 28px; color: #10b981;"></i>
+            </div>
+            <h3 class="cv-modal-title">Candidature soumise !</h3>
+            <p class="cv-modal-desc">Indiquez l'entreprise à laquelle vous avez envoyé ce CV.</p>
+            <input type="hidden" id="submitCandId">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">NOM DE L'ENTREPRISE</label>
+                <input type="text" class="cv-modal-input" id="submitCandCompany" placeholder="Ex: Google, TotalEnergies...">
+            </div>
+            <div class="cv-modal-actions">
+                <button class="cv-modal-btn cancel" onclick="closeSubmitModal()"><i class="fas fa-xmark"></i> Annuler</button>
+                <button class="cv-modal-btn primary" onclick="confirmSubmit()" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-check"></i> Confirmer</button>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+
+    <!-- 4. Insights Bottom Grid -->
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 40px;">
+        <div class="card-v4">
+            <div class="card-head">
+                <h3>🎯 Compétences Maîtresses</h3>
+            </div>
+            <div class="skills-list" style="margin-top: 15px;">
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 600;">Data Engineering</span>
+                        <span>92%</span>
+                    </div>
+                    <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 92%; height: 100%; background: var(--dash-primary);"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 600;">Cloud Architecture</span>
+                        <span>85%</span>
+                    </div>
+                    <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 85%; height: 100%; background: var(--dash-secondary);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-v4">
+            <div class="card-head">
+                <h3>🔔 Alertes Match</h3>
+            </div>
+            <div id="job-alerts-list" style="margin-top: 15px;">
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Aucune nouvelle opportunité détectée...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attribution Footer -->
+    <div class="dashboard-attribution"
+        style="margin-top: 80px; padding: 60px 20px; text-align: center; border-top: 1px solid var(--dash-border); background: rgba(255,255,255,0.01); border-radius: 40px 40px 0 0;">
+        <div
+            style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--dash-primary); margin: 0 auto 20px auto; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <img src="/static/images/dr_castro.png" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 8px;">Une idée originale de</p>
+        <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">Docteur Castro Houmenou</h3>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchDashboardData();
+    });
+
+    async function fetchDashboardData() {
+        try {
+            const response = await fetch('/api/dashboard-data');
+            if (!response.ok) throw new Error('Erreur API');
+            const data = await response.json();
+
+            updateUI(data);
+            initCharts(data);
+            
+            // Nouveau: charger les candidatures réelles
+            await fetchCandidacies();
+            await fetchCandidacyStats();
+
+            document.getElementById('dashboard-loading').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+            document.getElementById('dashboard-content').classList.add('fade-in');
+        } catch (e) {
+            console.error(e);
+            document.getElementById('dashboard-loading').innerHTML = `
+                <div style="color: var(--danger);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
+                    <p style="margin-top: 20px;">Erreur de chargement. Veuillez rafraîchir.</p>
+                </div>
+            `;
+        }
+    }
+
+    async function fetchCandidacies() {
+        try {
+            const resp = await fetch('/api/candidacies');
+            const data = await resp.json();
+            if (!data.success) return;
+
+            const tbody = document.getElementById('candidacies-table-body');
+            const badge = document.getElementById('cand-count-badge');
+            tbody.innerHTML = '';
+            if (badge) badge.textContent = data.candidacies.length;
+
+            if (data.candidacies.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 50px; color: var(--text-muted);">
+                    <i class="fas fa-folder-open" style="font-size:2.5rem; margin-bottom:12px; display:block; opacity:0.4;"></i>
+                    Analysez ou optimisez un CV pour voir vos candidatures ici.
+                    <br><a href="/cv-improver" style="color: var(--dash-primary); font-weight:700; text-decoration:none;">→ Optimiser mon CV</a>
+                </td></tr>`;
+                return;
+            }
+
+            data.candidacies.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.className = 'registry-row-v4';
+                tr.dataset.id = c.id;
+
+                // Source badge
+                const sourceBadge = c.source === 'optimized'
+                    ? '<span style="background:rgba(99,102,241,0.15);color:#6366f1;padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:700;">✨ Optimisé</span>'
+                    : c.source === 'analyzed'
+                    ? '<span style="background:rgba(59,130,246,0.15);color:#3b82f6;padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:700;">📊 Analysé</span>'
+                    : '<span style="background:rgba(100,116,139,0.15);color:#64748b;padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:700;">📝 Manuel</span>';
+
+                // Score badge
+                const scoreColor = c.cv_score >= 70 ? '#10b981' : c.cv_score >= 50 ? '#f59e0b' : '#ef4444';
+                const scoreBadge = c.cv_score
+                    ? `<span style="font-weight:800;color:${scoreColor};">${c.cv_score}%</span>`
+                    : `<span style="color:var(--text-muted);">—</span>`;
+
+                // Status pill
+                let statusHtml = '';
+                switch(c.status) {
+                    case 'pending':   statusHtml = '<span class="cand-pill pending">⏳ En attente</span>'; break;
+                    case 'submitted': statusHtml = '<span class="cand-pill submitted">📬 Soumis</span>'; break;
+                    case 'won':       statusHtml = '<span class="cand-pill won">🏆 Gagné</span>'; break;
+                    case 'lost':      statusHtml = '<span class="cand-pill lost">❌ Perdu</span>'; break;
+                }
+
+                // Action buttons — contextuels selon le statut
+                let actions = '';
+                if (c.status === 'pending') {
+                    actions = `<button onclick="openSubmitModal(${c.id})" class="cand-action-btn submit">📬 Soumis</button>`;
+                } else if (c.status === 'submitted') {
+                    actions = `
+                        <button onclick="markWon(${c.id})" class="cand-action-btn won">✅ Gagné</button>
+                        <button onclick="markLost(${c.id})" class="cand-action-btn lost">❌ Perdu</button>
+                    `;
+                } else {
+                    actions = `<span style="font-size:0.8rem;color:var(--text-muted);">Terminé</span>`;
+                }
+                actions += ` <button onclick="deleteCandidacy(${c.id}, this)" class="cand-action-btn del" title="Supprimer"><i class="fas fa-trash"></i></button>`;
+
+                const company = c.company ? `<div style="font-size:0.8rem;color:#10b981;font-weight:600;">${c.company}</div>` : '';
+
+                tr.innerHTML = `
+                    <td>${sourceBadge}</td>
+                    <td>
+                        <div style="font-weight:700;color:var(--text-primary);">${c.job_title.substring(0, 45)}</div>
+                        ${company}
+                        <div style="font-size:0.75rem;color:var(--text-muted);">${c.filename || ''}</div>
+                    </td>
+                    <td>${scoreBadge}</td>
+                    <td>${statusHtml}</td>
+                    <td><span style="font-size:0.85rem;color:var(--text-muted);">${c.created_at}</span></td>
+                    <td style="text-align:right;white-space:nowrap;">${actions}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) { console.error(err); }
+    }
+
+    // ─── Submit Modal ───
+    function openSubmitModal(id) {
+        document.getElementById('submitCandId').value = id;
+        document.getElementById('submitCandCompany').value = '';
+        document.getElementById('submitCandModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('submitCandCompany').focus(), 150);
+    }
+    function closeSubmitModal() {
+        document.getElementById('submitCandModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    async function confirmSubmit() {
+        const id = document.getElementById('submitCandId').value;
+        const company = document.getElementById('submitCandCompany').value.trim();
+        if (!company) { alert('Veuillez renseigner l\'entreprise.'); return; }
+        try {
+            const resp = await fetch(`/api/candidacy/submit/${id}`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ company })
+            });
+            const data = await resp.json();
+            if (data.success) { closeSubmitModal(); fetchCandidacies(); fetchCandidacyStats(); }
+            else alert(data.error);
+        } catch(e) { console.error(e); }
+    }
+
+    // ─── Won / Lost ───
+    async function markWon(id) {
+        if (!confirm('🎉 Félicitations ! Confirmer que vous avez été recruté(e) ?')) return;
+        const resp = await fetch(`/api/candidacy/won/${id}`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: '{}' });
+        const data = await resp.json();
+        if (data.success) { fetchCandidacies(); fetchCandidacyStats(); showDashToast(data.message, 'success'); }
+    }
+    async function markLost(id) {
+        if (!confirm('Confirmer que cette candidature n\'a pas abouti ?')) return;
+        const resp = await fetch(`/api/candidacy/lost/${id}`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: '{}' });
+        const data = await resp.json();
+        if (data.success) { fetchCandidacies(); fetchCandidacyStats(); showDashToast(data.message, 'info'); }
+    }
+
+    // ─── Delete ───
+    async function deleteCandidacy(id, btn) {
+        if (!confirm('Supprimer cette entrée ?')) return;
+        btn.disabled = true;
+        const resp = await fetch(`/api/candidacy/delete/${id}`, { method: 'POST' });
+        const data = await resp.json();
+        if (data.success) { fetchCandidacies(); fetchCandidacyStats(); }
+    }
+
+    // ─── Filter ───
+    function filterCandidacies() {
+        const q = document.getElementById('candSearchInput').value.toLowerCase();
+        document.querySelectorAll('#candidacies-table-body tr').forEach(tr => {
+            tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+
+    async function fetchCandidacyStats() {
+        try {
+            const resp = await fetch('/api/stats/candidacies');
+            const data = await resp.json();
+            if (data.success) {
+                const s = data.stats;
+                if (document.getElementById('v3-success-rate')) {
+                    document.getElementById('v3-success-rate').textContent = `${s.success_rate}%`;
+                }
+                // Optionnel: on pourrait mettre à jour d'autres compteurs ici si on en ajoute
+            }
+        } catch (e) { console.error("Erreur stats candidatures:", e); }
+    }
+
+    // ─── Toast ───
+    function showDashToast(msg, type = 'info') {
+        const t = document.createElement('div');
+        t.style.cssText = `position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:12px 28px;border-radius:100px;font-weight:600;z-index:9999;font-size:14px;color:white;animation:fadeIn 0.3s ease;`;
+        t.style.background = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#6366f1';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+    }
+
+    function updateUI(data) {
+        // Simple Stats
+        if (document.getElementById('v3-avg-score')) document.getElementById('v3-avg-score').textContent = `${data.avg_score}%`;
+        if (document.getElementById('v3-best-score')) document.getElementById('v3-best-score').textContent = `${data.best_score}%`;
+        if (document.getElementById('v3-total-analyses')) document.getElementById('v3-total-analyses').textContent = data.total_analyses;
+
+        const badge = document.getElementById('improvement-badge');
+        if (badge) {
+            badge.textContent = data.improvement >= 0 ? `+${data.improvement}% Évolution` : `${data.improvement}% Régression`;
+            badge.style.color = data.improvement >= 0 ? '#10b981' : '#f43f5e';
+        }
+
+        const nameEl = document.getElementById('user-display-name');
+        if (nameEl && data.user) nameEl.textContent = data.user.firstname;
+
+        // Recommendations
+        const recList = document.getElementById('v3-recommendations-list');
+        if (recList) {
+            recList.innerHTML = '';
+            if (data.user.bio && data.user.skills && data.user.achievements) {
+                recList.innerHTML = `<div style="padding: 15px; background: rgba(16,185,129,0.1); border-radius: 12px; color: #10b981; font-weight: 600;">✨ Profil 100% optimisé !</div>`;
+            } else {
+                if (!data.user.bio) recList.innerHTML += `<div style="margin-bottom: 10px; cursor: pointer; color: var(--text-secondary);" onclick="location.href='/profile#bio'">💡 Ajoutez un objectif professionnel</div>`;
+                if (!data.user.skills) recList.innerHTML += `<div style="margin-bottom: 10px; cursor: pointer; color: var(--text-secondary);" onclick="location.href='/profile#skills'">💡 Listez vos compétences clés</div>`;
+                if (!data.user.achievements) recList.innerHTML += `<div style="cursor: pointer; color: var(--text-secondary);" onclick="location.href='/profile#achievements'">💡 Valorisez vos réalisations</div>`;
+            }
+        }
+    }
+
+    function initCharts(data) {
+        // Line Chart
+        new ApexCharts(document.querySelector("#v3-main-chart-apex"), {
+            series: [{ name: 'Adéquation', data: data.weekly_values }],
+            chart: { type: 'area', height: 320, toolbar: { show: false }, background: 'transparent', foreColor: '#94a3b8' },
+            stroke: { curve: 'smooth', width: 3, colors: ['#6366f1'] },
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [20, 100] } },
+            xaxis: { categories: data.weekly_labels, axisBorder: { show: false } },
+            theme: { mode: 'dark' },
+            grid: { borderColor: 'rgba(255,255,255,0.05)' }
+        }).render();
+
+        // Donut Chart
+        new ApexCharts(document.querySelector("#v3-dist-chart-apex"), {
+            series: [data.dist.high, data.dist.medium, data.dist.low],
+            chart: { type: 'donut', height: 250 },
+            labels: ['Elevé', 'Moyen', 'Faible'],
+            colors: ['#10b981', '#f59e0b', '#ef4444'],
+            legend: { position: 'bottom', labels: { colors: '#94a3b8' } },
+            stroke: { show: false },
+            theme: { mode: 'dark' }
+        }).render();
+    }
+
+    function viewDetailedAnalysis(id) {
+        window.location.href = `/cv-analysis/${id}`;
+    }
+
+    function filterDashboardAnalyses() {
+        const input = document.getElementById('candSearchInput');
+        if (!input) return;
+        const query = input.value.toLowerCase();
+        const rows = document.querySelectorAll('#candidacies-table-body tr');
+        rows.forEach(row => {
+            if (row.cells.length < 5) return;
+            const match = row.innerText.toLowerCase().includes(query);
+            row.style.display = match ? '' : 'none';
+        });
+    }
+</script>
+{% endblock %}

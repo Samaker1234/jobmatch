@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription | JobMatch - Rejoignez l'élite</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        // Dark mode default for auth pages
+        document.documentElement.classList.add('dark-mode');
+    </script>
+</head>
+
+<body class="auth-body">
+    <!-- Decorative Background Shapes -->
+    <div class="auth-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <div class="auth-container">
+        <!-- Left Panel - Image & Branding -->
+        <div class="auth-left"
+            style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1171&q=80');">
+            <div class="auth-left-content">
+                <a href="/" class="auth-logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JobMatch Logo">
+                </a>
+                <h1>Propulsez votre carrière avec l'IA.</h1>
+                <p>Rejoignez des milliers de professionnels qui utilisent nos outils avancés pour transformer leur recherche d'emploi en succès garanti.</p>
+
+                <div class="auth-features">
+                    <div class="feature-item">
+                        <i class="fas fa-rocket"></i>
+                        <span>Accès illimité aux analyses IA</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-magic"></i>
+                        <span>Optimiseur de CV intelligent</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Tableau de bord de suivi premium</span>
+                    </div>
+                </div>
+
+                <!-- Concept Attribution -->
+                <div class="auth-concept-attribution">
+                    <div class="concept-avatar">
+                        <img src="/static/images/dr_castro.png" alt="Docteur Castro" onerror="this.src='https://ui-avatars.com/api/?name=Dr+Castro&background=6366f1&color=fff'">
+                    </div>
+                    <div class="concept-text">
+                        <span class="concept-label">Concept original par</span>
+                        <span class="concept-name">Docteur Castro Houmenou</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Form Area -->
+        <div class="auth-right">
+            <div class="form-container">
+                <!-- Mobile Logo -->
+                <div class="auth-logo-mobile">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JobMatch Logo">
+                </div>
+
+                <div class="form-header">
+                    <h2>Bienvenue !</h2>
+                    <p>Créez votre profil professionnel en 30 secondes</p>
+                </div>
+
+                <form id="register-form" class="auth-form">
+                    <div style="display: flex; gap: 16px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="firstname">Prénom</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="far fa-user"></i></span>
+                                <input type="text" id="firstname" name="firstname" placeholder="Jean" required autocomplete="given-name">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label for="lastname">Nom</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="far fa-user"></i></span>
+                                <input type="text" id="lastname" name="lastname" placeholder="Dupont" required autocomplete="family-name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Adresse Email</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="far fa-envelope"></i></span>
+                            <input type="email" id="email" name="email" placeholder="nom@exemple.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                        <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 10px; overflow: hidden;">
+                            <div id="strength-fill" style="height: 100%; width: 0%; transition: all 0.3s ease;"></div>
+                        </div>
+                        <div id="strength-text" style="font-size: 0.7rem; font-weight: 700; margin-top: 5px; color: var(--auth-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Sécurité : Faible</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirmer le mot de passe</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profession">Votre Domaine</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-briefcase"></i></span>
+                            <select id="profession" name="profession" required style="flex: 1; border: none; background: transparent; padding: 14px 16px 14px 0; outline: none; font-weight: 600; color: white; cursor: pointer;">
+                                <option value="" style="background: #1e1b4b;">Sélectionner...</option>
+                                <option value="Développement" style="background: #1e1b4b;">Développement</option>
+                                <option value="Design" style="background: #1e1b4b;">Design</option>
+                                <option value="Marketing" style="background: #1e1b4b;">Marketing</option>
+                                <option value="Data" style="background: #1e1b4b;">Data Science</option>
+                                <option value="RH" style="background: #1e1b4b;">Ressources Humaines</option>
+                                <option value="Autre" style="background: #1e1b4b;">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="error-message" class="error-banner" style="display: none;"></div>
+                    <div id="success-message" class="success-message" style="display: none;">
+                        <i class="fas fa-check-circle"></i> Compte créé ! Redirection...
+                    </div>
+
+                    <button type="submit" class="auth-button">
+                        <span class="btn-text">Créer mon compte premium</span>
+                        <span class="btn-loader" style="display: none;"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    </button>
+                </form>
+
+                <div class="form-footer">
+                    <p>Déjà membre ? <a href="/connexion" class="auth-link">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password strength logic
+        document.getElementById('password').addEventListener('input', function (e) {
+            const password = e.target.value;
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+            const fill = document.getElementById('strength-fill');
+            const textEl = document.getElementById('strength-text');
+            const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
+            const texts = ['Très Faible', 'Moyen', 'Fort', 'Excellent'];
+
+            const idx = Math.max(0, strength - 1);
+            fill.style.width = (strength * 25) + '%';
+            fill.style.background = colors[idx];
+            textEl.textContent = 'Sécurité : ' + texts[idx];
+            textEl.style.color = colors[idx];
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            if (password !== confirm) {
+                showError('Les mots de passe ne correspondent pas.');
+                return;
+            }
+
+            const btn = document.querySelector('.auth-button');
+            const btnText = btn.querySelector('.btn-text');
+            const btnLoader = btn.querySelector('.btn-loader');
+
+            try {
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstname: document.getElementById('firstname').value,
+                        lastname: document.getElementById('lastname').value,
+                        email: document.getElementById('email').value,
+                        password: password,
+                        profession: document.getElementById('profession').value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showError(data.error || 'Erreur lors de l\'inscription.');
+                } else {
+                    document.getElementById('error-message').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'flex';
+                    setTimeout(() => window.location.href = '/dashboard', 1500);
+                }
+            } catch (error) {
+                showError('Erreur serveur. Veuillez réessayer.');
+            } finally {
+                if (document.getElementById('success-message').style.display !== 'flex') {
+                    btn.disabled = false;
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                }
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + message;
+            errorDiv.style.display = 'flex';
+            errorDiv.classList.remove('shake');
+            void errorDiv.offsetWidth;
+            errorDiv.classList.add('shake');
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = event.currentTarget.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
+</body>
+
+</html>

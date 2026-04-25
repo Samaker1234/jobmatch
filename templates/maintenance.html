@@ -1,0 +1,82 @@
+{% extends "base_v3.html" %}
+
+{% block title %}Maintenance en cours - JobMatch{% endblock %}
+
+{% block extra_css %}
+<style>
+    .maintenance-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #030305 100%);
+    }
+
+    .maintenance-icon {
+        font-size: 100px;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #6366f1, #00d2ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: rotate 10s linear infinite;
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .maintenance-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 20px;
+        letter-spacing: -2px;
+    }
+
+    .maintenance-text {
+        color: #94a3b8;
+        font-size: 1.2rem;
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    .glass-box {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 30px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="maintenance-container">
+    <div class="glass-box pro-fade-in">
+        <div class="maintenance-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        <h1 class="maintenance-title">Maintenance en cours</h1>
+        <p class="maintenance-text">
+            Nous mettons à jour JobMatch pour vous offrir une expérience encore plus performante.
+            Revenez dans quelques instants !
+        </p>
+        <div style="margin-top: 40px;">
+            <span class="badge-pro blue" style="padding: 10px 20px; font-size: 14px;">
+                <i class="fas fa-clock" style="margin-right: 10px;"></i>
+                Retour prévu très bientôt
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}

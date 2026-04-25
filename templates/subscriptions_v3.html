@@ -1,0 +1,285 @@
+{% extends "base_v3.html" %}
+
+{% block title %}Pass Premium{% endblock %}
+{% block page_title %}Pass Premium{% endblock %}
+
+{% block content %}
+<div class="pro-metric-grid">
+    <div class="metric-card-pro highlight">
+        <div class="metric-header">
+            <span class="metric-title">Statut Actuel</span>
+        </div>
+        <div class="metric-value">Premium</div>
+        <div class="metric-footer">Expire le 09 Mai 2026</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">Analyses Utilisées</span>
+            <span class="trend-pro pos">24/∞</span>
+        </div>
+        <div class="metric-value">24</div>
+        <div class="metric-footer">Cet mois-ci</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-header">
+            <span class="metric-title">CVs Améliorés</span>
+            <span class="trend-pro pos">+5</span>
+        </div>
+        <div class="metric-value">12</div>
+        <div class="metric-footer">Depuis votre abonnement</div>
+    </div>
+</div>
+
+<!-- Subscription Plans -->
+<div class="pro-bottom-grid">
+    <!-- Basic Plan -->
+    <div class="pro-card" style="border: 1px solid var(--border); background: var(--bg-primary);">
+        <div class="card-head">
+            <h3>🎯 Plan Starter</h3>
+        </div>
+        <div style="padding-top: 16px;">
+            <div style="font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">Gratuit</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Pour commencer</div>
+
+            <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ 5 analyses/mois</li>
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ CV Improver basique</li>
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ Analyseur d'offres</li>
+                <li style="padding: 8px 0; font-size: 13px; color: var(--text-muted);">✗ Support prioritaire</li>
+            </ul>
+
+            <button class="cta-button secondary" style="width: 100%;">Actuellement Actif</button>
+        </div>
+    </div>
+
+    <!-- Pro Plan -->
+    <div class="pro-card"
+        style="border: 2px solid var(--primary); background: linear-gradient(135deg, rgba(99,102,241,0.05), transparent);">
+        <div
+            style="display: inline-block; background: var(--primary); color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-bottom: 12px;">
+            POPULAIRE</div>
+        <div class="card-head">
+            <h3>⭐ Plan Pro</h3>
+        </div>
+        <div style="padding-top: 16px;">
+            <div style="font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">9.99€<span
+                    style="font-size: 14px; color: var(--text-muted);">/mois</span></div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Le plus populaire</div>
+
+            <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ 50 analyses/mois</li>
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ CV Improver Avancé</li>
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ Analyse IA Complète</li>
+                <li style="padding: 8px 0; font-size: 13px; color: var(--text-secondary);">✓ Support par email</li>
+            </ul>
+
+            <button class="cta-button" style="width: 100%;">Actuellement Actif</button>
+        </div>
+    </div>
+
+    <!-- Business Plan -->
+    <div class="pro-card" style="border: 1px solid var(--border); background: var(--bg-primary);">
+        <div class="card-head">
+            <h3>
+                <svg style="width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin-right: 6px;"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4.5 16.5c-1.5 1.25-2 5-2 5s3.75-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z">
+                    </path>
+                    <path
+                        d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z">
+                    </path>
+                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                </svg>
+                Plan Business
+            </h3>
+        </div>
+        <div style="padding-top: 16px;">
+            <div style="font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">29.99€<span
+                    style="font-size: 14px; color: var(--text-muted);">/mois</span></div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Pour les professionnels</div>
+
+            <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ Analyses illimitées</li>
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ API Access</li>
+                <li
+                    style="padding: 8px 0; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border);">
+                    ✓ Support prioritaire 24/7</li>
+                <li style="padding: 8px 0; font-size: 13px; color: var(--text-secondary);">✓ Rapports détaillés</li>
+            </ul>
+
+            <button class="cta-button secondary" style="width: 100%;">Mettre à jour</button>
+        </div>
+    </div>
+</div>
+
+<!-- Subscription Management -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 24px;">
+    <div class="pro-card insights-card">
+        <div class="card-head">
+            <h3>📋 Détails de Votre Abonnement</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+            <div>
+                <span style="color: var(--text-muted); display: block; font-size: 11px; margin-bottom: 4px;">PLAN
+                    ACTUEL</span>
+                <span style="font-weight: 600;">Pro</span>
+            </div>
+            <div>
+                <span style="color: var(--text-muted); display: block; font-size: 11px; margin-bottom: 4px;">DATE DE
+                    RENOUVELLEMENT</span>
+                <span style="font-weight: 600;">09 Mai 2026</span>
+            </div>
+            <div>
+                <span style="color: var(--text-muted); display: block; font-size: 11px; margin-bottom: 4px;">MONTANT
+                    MENSUEL</span>
+                <span style="font-weight: 600; color: var(--primary);">9.99€</span>
+            </div>
+            <div>
+                <span
+                    style="color: var(--text-muted); display: block; font-size: 11px; margin-bottom: 4px;">STATUT</span>
+                <span style="font-weight: 600; color: var(--success);">Actif</span>
+            </div>
+        </div>
+        <button class="cta-button secondary" style="width: 100%; margin-top: 16px;">Gérer la Facturation</button>
+    </div>
+
+    <div class="pro-card insights-card">
+        <div class="card-head">
+            <h3>📊 Utilisation Mensuelle</h3>
+        </div>
+        <div class="skills-list">
+            <div class="skill-item">
+                <span class="skill-name">Analyses</span>
+                <span class="skill-bar">
+                    <span class="skill-fill" style="width: 48%"></span>
+                </span>
+                <span class="skill-pct">24/50</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name">CVs Améliorés</span>
+                <span class="skill-bar">
+                    <span class="skill-fill" style="width: 80%"></span>
+                </span>
+                <span class="skill-pct">8/10</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name">Offres Comparées</span>
+                <span class="skill-bar">
+                    <span class="skill-fill" style="width: 60%"></span>
+                </span>
+                <span class="skill-pct">12/20</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="pro-card insights-card">
+        <div class="card-head">
+            <h3>💳 Moyens de Paiement</h3>
+        </div>
+        <div style="padding: 16px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 12px;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">CARTE PRINCIPALE</div>
+            <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Visa •••• 4242</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Expire 12/2026</div>
+        </div>
+        <button class="cta-button secondary" style="width: 100%;">Ajouter une Carte</button>
+    </div>
+</div>
+
+<!-- Billing History -->
+<div class="pro-card table-section" style="margin-top: 24px;">
+    <div class="card-head">
+        <h3>📜 Historique de Facturation</h3>
+    </div>
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Invoice</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>09 Fév 2026</td>
+                    <td>Plan Pro - Renouvellement mensuel</td>
+                    <td style="font-weight: 600;">9.99€</td>
+                    <td><span class="status-pill pos">Payé</span></td>
+                    <td><button class="tbl-action" onclick="downloadInvoice('INV-2026-02')"
+                            style="background: var(--dash-primary); color: white; border: none; padding: 6px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">Télécharger</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>09 Jan 2026</td>
+                    <td>Plan Pro - Renouvellement mensuel</td>
+                    <td style="font-weight: 600;">9.99€</td>
+                    <td><span class="status-pill pos">Payé</span></td>
+                    <td><button class="tbl-action" onclick="downloadInvoice('INV-2026-01')"
+                            style="background: var(--dash-primary); color: white; border: none; padding: 6px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">Télécharger</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>09 Déc 2025</td>
+                    <td>Plan Pro - Renouvellement mensuel</td>
+                    <td style="font-weight: 600;">9.99€</td>
+                    <td><span class="status-pill pos">Payé</span></td>
+                    <td><button class="tbl-action" onclick="downloadInvoice('INV-2025-12')"
+                            style="background: var(--dash-primary); color: white; border: none; padding: 6px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">Télécharger</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Footer Actions -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+    <button class="cta-button secondary">Pause de l'Abonnement</button>
+    <button class="cta-button secondary">Annuler l'Abonnement</button>
+</div>
+
+<script>
+    function downloadInvoice(invoiceId) {
+        showToast(`Préparation de la facture ${invoiceId}...`, 'info');
+
+        setTimeout(() => {
+            // Création d'un faux PDF visuel
+            const docContent = `JobMatch Facture ${invoiceId}
+            \nPlan Pro - 9.99€ payé.
+            \nMerci de votre confiance.`;
+
+            const blob = new Blob([docContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `Facture_${invoiceId}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showToast('Facture téléchargée ✓', 'success');
+        }, 800);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+
+# Core web framework
+Flask==3.0.0
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.0.3
+Flask-Mail==0.10.0
+
+# PDF / parsing / ML
+PyPDF2==3.0.1
+scikit-learn==1.3.2
+nltk==3.8.1
+numpy==1.24.3
+reportlab==4.0.7
+python-pptx==0.6.21
+
+# NLP / Transformers (optional but recommended for advanced features)
+transformers==4.35.2
+torch==2.1.0
+sentence-transformers==2.2.2
+sentencepiece==0.1.98
+
+# LLM API clients (choose one or more depending on your provider)
+openai==1.3.0
+anthropic==0.7.0
+google-generativeai==0.8.6
+
+# Vector DB clients (optional for semantic search / recommendations)
+pinecone-client==2.2.0
+# weaviate-client newer versions may require Python >= 3.10 on Windows; pinning to a 3.x series compatible with Python 3.9
+weaviate-client==3.4.1
+
+# Utilities
+python-dotenv==1.0.0
+
+# OAuth / Auth
+Authlib==1.6.6
