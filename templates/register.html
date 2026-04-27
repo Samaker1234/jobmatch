@@ -4,255 +4,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription | JobMatch - Rejoignez l'élite</title>
+    <title>Inscription | JobMatch Premium</title>
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_v3.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        // Dark mode default for auth pages
-        document.documentElement.classList.add('dark-mode');
-    </script>
+    <style>
+        .strength-meter {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: flex;
+            gap: 4px;
+        }
+        .strength-segment {
+            flex: 1;
+            height: 100%;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .strength-text-v3 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+            text-align: right;
+        }
+    </style>
 </head>
 
-<body class="auth-body">
-    <!-- Decorative Background Shapes -->
-    <div class="auth-bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
+<body class="auth-v3-body">
+    <!-- Background Effect -->
+    <div class="aurora-bg">
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
     </div>
 
-    <div class="auth-container">
-        <!-- Left Panel - Image & Branding -->
-        <div class="auth-left"
-            style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1171&q=80');">
-            <div class="auth-left-content">
-                <a href="/" class="auth-logo">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JobMatch Logo">
-                </a>
-                <h1>Propulsez votre carrière avec l'IA.</h1>
-                <p>Rejoignez des milliers de professionnels qui utilisent nos outils avancés pour transformer leur recherche d'emploi en succès garanti.</p>
+    <div class="auth-v3-container">
+        <!-- Left Side: Visual Branding -->
+        <div class="auth-v3-left">
+            <a href="/" class="auth-v3-logo">
+                <div class="logo-box">JM</div>
+                <div class="logo-text">JobMatch <span style="font-weight: 300; opacity: 0.7;">Pro</span></div>
+            </a>
 
-                <div class="auth-features">
-                    <div class="feature-item">
-                        <i class="fas fa-rocket"></i>
-                        <span>Accès illimité aux analyses IA</span>
+            <div class="auth-v3-hero">
+                <h1>Créez votre <br>futur <br>aujourd'hui.</h1>
+                <p>Rejoignez le cercle fermé des professionnels qui utilisent l'IA pour dominer le marché de l'emploi.</p>
+                
+                <div class="hero-features">
+                    <div class="feature-pill">
+                        <i class="fas fa-crown"></i>
+                        <span>Compte Premium Illimité</span>
                     </div>
-                    <div class="feature-item">
+                    <div class="feature-pill">
                         <i class="fas fa-magic"></i>
-                        <span>Optimiseur de CV intelligent</span>
+                        <span>IA Génératrice d'Offres</span>
                     </div>
-                    <div class="feature-item">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Tableau de bord de suivi premium</span>
+                    <div class="feature-pill">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Tracking de Carrière</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Concept Attribution -->
-                <div class="auth-concept-attribution">
-                    <div class="concept-avatar">
-                        <img src="/static/images/dr_castro.png" alt="Docteur Castro" onerror="this.src='https://ui-avatars.com/api/?name=Dr+Castro&background=6366f1&color=fff'">
-                    </div>
-                    <div class="concept-text">
-                        <span class="concept-label">Concept original par</span>
-                        <span class="concept-name">Docteur Castro Houmenou</span>
+            <div class="auth-v3-footer">
+                <div class="author-badge">
+                    <img src="/static/images/dr_castro.png" class="author-img" onerror="this.src='https://ui-avatars.com/api/?name=Dr+Castro&background=6366f1&color=fff'">
+                    <div class="author-info">
+                        <span>CONCEPT ORIGINAL PAR</span>
+                        <span class="name">Dr. Castro Houmenou</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Panel - Form Area -->
-        <div class="auth-right">
-            <div class="form-container">
-                <!-- Mobile Logo -->
-                <div class="auth-logo-mobile">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JobMatch Logo">
+        <!-- Right Side: Register Form -->
+        <div class="auth-v3-right">
+            <div class="form-box">
+                <div class="form-header-v3">
+                    <h2>Bienvenue.</h2>
+                    <p>Commencez votre ascension professionnelle.</p>
                 </div>
 
-                <div class="form-header">
-                    <h2>Bienvenue !</h2>
-                    <p>Créez votre profil professionnel en 30 secondes</p>
-                </div>
-
-                <form id="register-form" class="auth-form">
-                    <div style="display: flex; gap: 16px;">
-                        <div class="form-group" style="flex: 1;">
+                <form id="register-form-v3">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="input-group-v3">
                             <label for="firstname">Prénom</label>
-                            <div class="input-wrapper">
-                                <span class="input-icon"><i class="far fa-user"></i></span>
-                                <input type="text" id="firstname" name="firstname" placeholder="Jean" required autocomplete="given-name">
+                            <div class="input-field-v3">
+                                <i class="far fa-user prefix-icon"></i>
+                                <input type="text" id="firstname" placeholder="Jean" required autocomplete="given-name">
                             </div>
                         </div>
-
-                        <div class="form-group" style="flex: 1;">
+                        <div class="input-group-v3">
                             <label for="lastname">Nom</label>
-                            <div class="input-wrapper">
-                                <span class="input-icon"><i class="far fa-user"></i></span>
-                                <input type="text" id="lastname" name="lastname" placeholder="Dupont" required autocomplete="family-name">
+                            <div class="input-field-v3">
+                                <i class="far fa-user prefix-icon"></i>
+                                <input type="text" id="lastname" placeholder="Dupont" required autocomplete="family-name">
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="input-group-v3">
                         <label for="email">Adresse Email</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="far fa-envelope"></i></span>
-                            <input type="email" id="email" name="email" placeholder="nom@exemple.com" required autocomplete="email">
+                        <div class="input-field-v3">
+                            <i class="far fa-envelope prefix-icon"></i>
+                            <input type="email" id="email" placeholder="nom@exemple.com" required autocomplete="email">
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="input-group-v3">
                         <label for="password">Mot de passe</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="fas fa-lock"></i></span>
-                            <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
-                            <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                        <div class="input-field-v3">
+                            <i class="fas fa-lock prefix-icon"></i>
+                            <input type="password" id="password" placeholder="••••••••" required autocomplete="new-password">
+                            <button type="button" class="toggle-pass-v3" onclick="togglePassword('password')">
                                 <i class="far fa-eye"></i>
                             </button>
                         </div>
-                        <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 10px; overflow: hidden;">
-                            <div id="strength-fill" style="height: 100%; width: 0%; transition: all 0.3s ease;"></div>
+                        <div class="strength-meter">
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
                         </div>
-                        <div id="strength-text" style="font-size: 0.7rem; font-weight: 700; margin-top: 5px; color: var(--auth-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Sécurité : Faible</div>
+                        <div id="strength-text" class="strength-text-v3" style="color: var(--auth-text-muted);">SÉCURITÉ : -</div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="confirm-password">Confirmer le mot de passe</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="fas fa-lock"></i></span>
-                            <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required autocomplete="new-password">
-                            <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">
-                                <i class="far fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="profession">Votre Domaine</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="fas fa-briefcase"></i></span>
-                            <select id="profession" name="profession" required style="flex: 1; border: none; background: transparent; padding: 14px 16px 14px 0; outline: none; font-weight: 600; color: white; cursor: pointer;">
-                                <option value="" style="background: #1e1b4b;">Sélectionner...</option>
-                                <option value="Développement" style="background: #1e1b4b;">Développement</option>
-                                <option value="Design" style="background: #1e1b4b;">Design</option>
-                                <option value="Marketing" style="background: #1e1b4b;">Marketing</option>
-                                <option value="Data" style="background: #1e1b4b;">Data Science</option>
-                                <option value="RH" style="background: #1e1b4b;">Ressources Humaines</option>
-                                <option value="Autre" style="background: #1e1b4b;">Autre</option>
+                    <div class="input-group-v3">
+                        <label for="profession">Domaine d'activité</label>
+                        <div class="input-field-v3">
+                            <i class="fas fa-briefcase prefix-icon"></i>
+                            <select id="profession" required>
+                                <option value="" disabled selected>Choisir un domaine...</option>
+                                <option value="Développement">Développement</option>
+                                <option value="Design">Design / UX</option>
+                                <option value="Marketing">Marketing / Com</option>
+                                <option value="Data">Data Science / IA</option>
+                                <option value="RH">Ressources Humaines</option>
+                                <option value="Finance">Finance / Gestion</option>
+                                <option value="Autre">Autre domaine</option>
                             </select>
+                            <i class="fas fa-chevron-down" style="position: absolute; right: 16px; font-size: 12px; pointer-events: none; color: var(--auth-text-muted);"></i>
                         </div>
                     </div>
 
-                    <div id="error-message" class="error-banner" style="display: none;"></div>
-                    <div id="success-message" class="success-message" style="display: none;">
-                        <i class="fas fa-check-circle"></i> Compte créé ! Redirection...
-                    </div>
+                    <div id="alert-container"></div>
 
-                    <button type="submit" class="auth-button">
-                        <span class="btn-text">Créer mon compte premium</span>
-                        <span class="btn-loader" style="display: none;"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    <button type="submit" class="btn-primary-v3" id="submit-btn">
+                        <span class="btn-text">Créer mon profil d'élite</span>
+                        <i class="fas fa-sparkles"></i>
                     </button>
                 </form>
 
-                <div class="form-footer">
-                    <p>Déjà membre ? <a href="/connexion" class="auth-link">Se connecter</a></p>
+                <div class="form-switch-v3">
+                    Déjà membre ? <a href="/connexion">Se connecter</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Password strength logic
-        document.getElementById('password').addEventListener('input', function (e) {
-            const password = e.target.value;
-            let strength = 0;
-            if (password.length >= 8) strength++;
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-            if (/\d/.test(password)) strength++;
-            if (/[^a-zA-Z\d]/.test(password)) strength++;
+        const registerForm = document.getElementById('register-form-v3');
+        const alertContainer = document.getElementById('alert-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const passwordInput = document.getElementById('password');
 
-            const fill = document.getElementById('strength-fill');
+        // Password strength logic
+        passwordInput.addEventListener('input', function(e) {
+            const val = e.target.value;
+            let strength = 0;
+            if (val.length >= 8) strength++;
+            if (/[A-Z]/.test(val)) strength++;
+            if (/[0-9]/.test(val)) strength++;
+            if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+            const segments = document.querySelectorAll('.strength-segment');
             const textEl = document.getElementById('strength-text');
             const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
-            const texts = ['Très Faible', 'Moyen', 'Fort', 'Excellent'];
+            const texts = ['TRÈS FAIBLE', 'MOYEN', 'FORT', 'EXCELLENT'];
 
-            const idx = Math.max(0, strength - 1);
-            fill.style.width = (strength * 25) + '%';
-            fill.style.background = colors[idx];
-            textEl.textContent = 'Sécurité : ' + texts[idx];
-            textEl.style.color = colors[idx];
+            segments.forEach((s, i) => {
+                if (i < strength) {
+                    s.style.background = colors[strength - 1];
+                } else {
+                    s.style.background = 'rgba(255,255,255,0.05)';
+                }
+            });
+
+            if (strength > 0) {
+                textEl.textContent = 'SÉCURITÉ : ' + texts[strength - 1];
+                textEl.style.color = colors[strength - 1];
+            } else {
+                textEl.textContent = 'SÉCURITÉ : -';
+                textEl.style.color = 'var(--auth-text-muted)';
+            }
         });
 
-        document.getElementById('register-form').addEventListener('submit', async (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const password = document.getElementById('password').value;
-            const confirm = document.getElementById('confirm-password').value;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Création du compte...';
 
-            if (password !== confirm) {
-                showError('Les mots de passe ne correspondent pas.');
-                return;
-            }
-
-            const btn = document.querySelector('.auth-button');
-            const btnText = btn.querySelector('.btn-text');
-            const btnLoader = btn.querySelector('.btn-loader');
+            const payload = {
+                firstname: document.getElementById('firstname').value,
+                lastname: document.getElementById('lastname').value,
+                email: document.getElementById('email').value,
+                password: passwordInput.value,
+                profession: document.getElementById('profession').value
+            };
 
             try {
-                btn.disabled = true;
-                btnText.style.display = 'none';
-                btnLoader.style.display = 'inline-block';
-
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        firstname: document.getElementById('firstname').value,
-                        lastname: document.getElementById('lastname').value,
-                        email: document.getElementById('email').value,
-                        password: password,
-                        profession: document.getElementById('profession').value
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await response.json();
 
                 if (!response.ok) {
-                    showError(data.error || 'Erreur lors de l\'inscription.');
+                    showAlert(data.error || 'Erreur lors de l\'inscription', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span class="btn-text">Créer mon profil d\'élite</span> <i class="fas fa-sparkles"></i>';
                 } else {
-                    document.getElementById('error-message').style.display = 'none';
-                    document.getElementById('success-message').style.display = 'flex';
+                    showAlert('Compte créé avec succès !', 'success');
                     setTimeout(() => window.location.href = '/dashboard', 1500);
                 }
             } catch (error) {
-                showError('Erreur serveur. Veuillez réessayer.');
-            } finally {
-                if (document.getElementById('success-message').style.display !== 'flex') {
-                    btn.disabled = false;
-                    btnText.style.display = 'inline';
-                    btnLoader.style.display = 'none';
-                }
+                showAlert('Erreur serveur. Veuillez réessayer.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="btn-text">Créer mon profil d\'élite</span> <i class="fas fa-sparkles"></i>';
             }
         });
 
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + message;
-            errorDiv.style.display = 'flex';
-            errorDiv.classList.remove('shake');
-            void errorDiv.offsetWidth;
-            errorDiv.classList.add('shake');
-            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `
+                <div class="alert-v3 ${type} ${type === 'error' ? 'shake' : ''}">
+                    <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                    ${message}
+                </div>
+            `;
         }
 
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
+        function togglePassword(id) {
+            const input = document.getElementById(id);
             const icon = event.currentTarget.querySelector('i');
-            if (field.type === 'password') {
-                field.type = 'text';
+            if (input.type === 'password') {
+                input.type = 'text';
                 icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                field.type = 'password';
+                input.type = 'password';
                 icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }

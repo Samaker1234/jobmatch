@@ -4,149 +4,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion | JobMatch - Optimisez votre carrière avec l'IA</title>
+    <title>Connexion | JobMatch Premium</title>
     
-    <!-- Meta tags for SEO & Premium look -->
-    <meta name="description" content="Connectez-vous à JobMatch pour optimiser votre CV et générer des offres d'emploi avec l'intelligence artificielle.">
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_v3.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        // Dark mode default for auth pages
-        document.documentElement.classList.add('dark-mode');
-    </script>
 </head>
 
-<body class="auth-body">
-    <!-- Decorative Background Shapes -->
-    <div class="auth-bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
+<body class="auth-v3-body">
+    <!-- Background Effect -->
+    <div class="aurora-bg">
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
     </div>
 
-    <div class="auth-container">
-        <!-- Left Panel - Image & Branding -->
-        <div class="auth-left"
-            style="background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80');">
-            <div class="auth-left-content">
-                <a href="/" class="auth-logo">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JobMatch Logo">
-                </a>
-                <h1>Propulsez votre carrière avec l'IA.</h1>
-                <p>Rejoignez des milliers de professionnels qui utilisent nos outils avancés pour transformer leur recherche d'emploi en succès garanti.</p>
+    <div class="auth-v3-container">
+        <!-- Left Side: Visual Branding -->
+        <div class="auth-v3-left">
+            <a href="/" class="auth-v3-logo">
+                <div class="logo-box">JM</div>
+                <div class="logo-text">JobMatch <span style="font-weight: 300; opacity: 0.7;">Pro</span></div>
+            </a>
 
-                <div class="auth-features">
-                    <div class="feature-item">
-                        <i class="fas fa-shield-halved"></i>
-                        <span>Analyse de CV sécurisée & ultra-rapide</span>
-                    </div>
-                    <div class="feature-item">
+            <div class="auth-v3-hero">
+                <h1>L'intelligence <br>au service de <br>votre carrière.</h1>
+                <p>Accédez à la plateforme d'élite pour optimiser votre trajectoire professionnelle avec nos algorithmes de pointe.</p>
+                
+                <div class="hero-features">
+                    <div class="feature-pill">
                         <i class="fas fa-microchip"></i>
-                        <span>Matching IA de haute précision</span>
+                        <span>Analyse Cognitive de CV</span>
                     </div>
-                    <div class="feature-item">
-                        <i class="fas fa-envelope-open-text"></i>
-                        <span>Optimisation automatique des candidatures</span>
+                    <div class="feature-pill">
+                        <i class="fas fa-rocket"></i>
+                        <span>Accélérateur de Candidature</span>
+                    </div>
+                    <div class="feature-pill">
+                        <i class="fas fa-shield-check"></i>
+                        <span>Confidentialité Totale</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Concept Attribution -->
-                <div class="auth-concept-attribution">
-                    <div class="concept-avatar">
-                        <img src="/static/images/dr_castro.png" alt="Docteur Castro" onerror="this.src='https://ui-avatars.com/api/?name=Dr+Castro&background=6366f1&color=fff'">
-                    </div>
-                    <div class="concept-text">
-                        <span class="concept-label">Concept original par</span>
-                        <span class="concept-name">Docteur Castro Houmenou</span>
+            <div class="auth-v3-footer">
+                <div class="author-badge">
+                    <img src="/static/images/dr_castro.png" class="author-img" onerror="this.src='https://ui-avatars.com/api/?name=Dr+Castro&background=6366f1&color=fff'">
+                    <div class="author-info">
+                        <span>CONCEPT ORIGINAL PAR</span>
+                        <span class="name">Dr. Castro Houmenou</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Panel - Form Area -->
-        <div class="auth-right">
-            <div class="form-container">
-                <!-- Mobile Logo -->
-                <div class="auth-logo-mobile">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JobMatch Logo">
+        <!-- Right Side: Login Form -->
+        <div class="auth-v3-right">
+            <div class="form-box">
+                <div class="form-header-v3">
+                    <h2>Bon retour.</h2>
+                    <p>Entrez vos identifiants pour continuer.</p>
                 </div>
 
-                <div class="form-header">
-                    <h2>Bon retour !</h2>
-                    <p>Accédez à votre espace professionnel</p>
-                </div>
-
-                <form id="login-form" class="auth-form" method="POST">
-                    <div class="form-group">
+                <form id="login-form-v3">
+                    <div class="input-group-v3">
                         <label for="email">Adresse Email</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="far fa-envelope"></i></span>
-                            <input type="email" id="email" name="email" placeholder="nom@exemple.com" required autocomplete="email">
+                        <div class="input-field-v3">
+                            <i class="far fa-envelope prefix-icon"></i>
+                            <input type="email" id="email" placeholder="nom@exemple.com" required autocomplete="email">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <label for="password" style="margin-bottom: 0;">Mot de passe</label>
-                            <a href="/forgot-password" class="auth-link" style="font-size: 0.8rem; opacity: 0.8;">Oublié ?</a>
+                    <div class="input-group-v3">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label for="password" style="margin: 0;">Mot de passe</label>
+                            <a href="/forgot-password" style="font-size: 12px; color: var(--auth-text-muted); text-decoration: none;">Oublié ?</a>
                         </div>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="fas fa-lock"></i></span>
-                            <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
-                            <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                        <div class="input-field-v3">
+                            <i class="fas fa-lock prefix-icon"></i>
+                            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" class="toggle-pass-v3" onclick="togglePassword('password')">
                                 <i class="far fa-eye"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div id="error-message" class="error-banner" style="display: none;"></div>
-                    <div id="success-message" class="success-message" style="display: none;">
-                        <i class="fas fa-check-circle"></i> Connexion réussie ! Redirection...
-                    </div>
+                    <div id="alert-container"></div>
 
-                    <button type="submit" class="auth-button">
+                    <button type="submit" class="btn-primary-v3" id="submit-btn">
                         <span class="btn-text">Se connecter</span>
-                        <span class="btn-loader" style="display: none;"><i class="fas fa-circle-notch fa-spin"></i></span>
+                        <i class="fas fa-arrow-right"></i>
                     </button>
 
-                    <div class="form-divider">
-                        <span>Ou continuer avec</span>
-                    </div>
+                    <div class="divider-v3">OU CONTINUER AVEC</div>
 
-                    <div class="social-login">
-                        <button type="button" class="social-button" onclick="loginGoogle()">
-                            <i class="fab fa-google"></i> Google
+                    <div class="social-grid-v3">
+                        <button type="button" class="btn-social-v3" onclick="window.location.href='/login/google'">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
+                            Google
                         </button>
-                        <button type="button" class="social-button" onclick="loginLinkedIn()">
-                            <i class="fab fa-linkedin-in"></i> LinkedIn
+                        <button type="button" class="btn-social-v3" onclick="alert('Bientôt disponible')">
+                            <i class="fab fa-linkedin" style="color: #0a66c2; font-size: 18px;"></i>
+                            LinkedIn
                         </button>
                     </div>
                 </form>
 
-                <div class="form-footer">
-                    <p>Nouveau ici ? <a href="/register" class="auth-link">Créer un compte premium</a></p>
+                <div class="form-switch-v3">
+                    Nouveau ici ? <a href="/register">Créer un compte premium</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        const loginForm = document.getElementById('login-form-v3');
+        const alertContainer = document.getElementById('alert-container');
+        const submitBtn = document.getElementById('submit-btn');
+
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            const btn = document.querySelector('.auth-button');
-            const btnText = btn.querySelector('.btn-text');
-            const btnLoader = btn.querySelector('.btn-loader');
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Authentification...';
 
             try {
-                btn.disabled = true;
-                btnText.style.display = 'none';
-                btnLoader.style.display = 'inline-block';
-
                 const response = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -156,52 +140,40 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    showError(data.error || 'Erreur lors de la connexion');
+                    showAlert(data.error || 'Erreur de connexion', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span class="btn-text">Se connecter</span> <i class="fas fa-arrow-right"></i>';
                 } else {
-                    document.getElementById('error-message').style.display = 'none';
-                    document.getElementById('success-message').style.display = 'flex';
+                    showAlert('Connexion réussie ! Redirection...', 'success');
                     setTimeout(() => window.location.href = '/dashboard', 1000);
                 }
             } catch (error) {
-                showError('Erreur serveur. Veuillez réessayer.');
-            } finally {
-                if (document.getElementById('success-message').style.display !== 'flex') {
-                    btn.disabled = false;
-                    btnText.style.display = 'inline';
-                    btnLoader.style.display = 'none';
-                }
+                showAlert('Erreur serveur. Veuillez réessayer.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="btn-text">Se connecter</span> <i class="fas fa-arrow-right"></i>';
             }
         });
 
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + message;
-            errorDiv.style.display = 'flex';
-            
-            // Animation shake
-            errorDiv.classList.remove('shake');
-            void errorDiv.offsetWidth; // Trigger reflow
-            errorDiv.classList.add('shake');
-            
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `
+                <div class="alert-v3 ${type} ${type === 'error' ? 'shake' : ''}">
+                    <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                    ${message}
+                </div>
+            `;
         }
 
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
+        function togglePassword(id) {
+            const input = document.getElementById(id);
             const icon = event.currentTarget.querySelector('i');
-            if (field.type === 'password') {
-                field.type = 'text';
+            if (input.type === 'password') {
+                input.type = 'text';
                 icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                field.type = 'password';
+                input.type = 'password';
                 icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
-
-        function loginGoogle() { window.location.href = '/login/google'; }
-        function loginLinkedIn() { alert('LinkedIn OAuth bientôt disponible'); }
     </script>
 </body>
 
