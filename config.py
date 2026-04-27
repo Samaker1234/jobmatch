@@ -36,8 +36,8 @@ class Config:
     GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-pro')
     GEMINI_ENABLED = os.environ.get('GEMINI_ENABLED', '1') == '1'
     
-    # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///jobmatch.db')
+    # Database (Fallback to SQLite if no Supabase URL provided)
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', os.environ.get('DATABASE_URL', 'sqlite:///jobmatch.db'))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Flask-Mail Configuration

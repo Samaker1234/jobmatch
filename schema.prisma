@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  firstname       String    @db.VarChar(50)
+  lastname        String    @db.VarChar(50)
+  email           String    @unique @db.VarChar(120)
+  password_hash   String?   @db.VarChar(128)
+  google_id       String?   @unique @db.VarChar(100)
+  profession      String?   @db.VarChar(100)
+  bio             String?   @db.Text
+  achievements    String?   @db.Text
+  skills          String?   @db.Text
+  profile_picture String?   @db.VarChar(200)
+  banner_image    String?   @db.VarChar(200)
+  is_admin        Boolean?  @default(false)
+  created_at      DateTime? @default(now())
+
+  analyses         CVAnalysis[]
+  job_profiles     JobProfile[]
+  saved_offers     SavedOffer[]
+  notifications    Notification[]
+  candidacies      Candidacy[]
+  support_messages SupportMessage[] @relation("UserMessages")
+  replied_messages SupportMessage[] @relation("AdminMessages")
+  chat_messages    ChatMessage[]
+
+  @@map("user")
+}
+
+model CVAnalysis {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  filename         String    @db.VarChar(100)
+  job_title        String?   @db.VarChar(200)
+  final_score      Float
+  similarity_score Float?
+  coverage_score   Float?
+  recommendation   String?   @db.Text
+  missing_keywords String?   @db.Text
+  created_at       DateTime? @default(now())
+
+  @@map("cv_analysis")
+}
+
+model JobProfile {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  title       String    @db.VarChar(200)
+  company     String?   @db.VarChar(100)
+  description String    @db.Text
+  tags        String?   @db.VarChar(200)
+  created_at  DateTime? @default(now())
+
+  @@map("job_profile")
+}
+
+model JobOffer {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(200)
+  company       String    @db.VarChar(100)
+  location      String?   @db.VarChar(100)
+  salary        String?   @db.VarChar(50)
+  description   String    @db.Text
+  requirements  String?   @db.Text
+  contract_type String?   @db.VarChar(50)
+  is_generated  Boolean?  @default(false)
+  created_at    DateTime? @default(now())
+
+  saved_by_users SavedOffer[]
+
+  @@map("job_offer")
+}
+
+model SavedOffer {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  offer_id   Int
+  offer      JobOffer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
+  status     String?   @default("saved") @db.VarChar(50)
+  created_at DateTime? @default(now())
+
+  @@map("saved_offer")
+}
+
+model Notification {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  title      String    @db.VarChar(100)
+  message    String    @db.Text
+  type       String?   @default("info") @db.VarChar(50)
+  is_read    Boolean?  @default(false)
+  created_at DateTime? @default(now())
+
+  @@map("notification")
+}
+
+model ResetCode {
+  id         Int       @id @default(autoincrement())
+  email      String    @db.VarChar(120)
+  code       String    @db.VarChar(10)
+  expires_at DateTime
+  created_at DateTime? @default(now())
+
+  @@map("reset_code")
+}
+
+model SystemSetting {
+  id          Int     @id @default(autoincrement())
+  key         String  @unique @db.VarChar(50)
+  value       String? @db.VarChar(500)
+  description String? @db.VarChar(200)
+
+  @@map("system_setting")
+}
+
+model SupportMessage {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  user        User      @relation("UserMessages", fields: [user_id], references: [id], onDelete: Cascade)
+  admin_id    Int?
+  admin       User?     @relation("AdminMessages", fields: [admin_id], references: [id], onDelete: Cascade)
+  sender_type String    @db.VarChar(20)
+  message     String    @db.Text
+  is_read     Boolean?  @default(false)
+  created_at  DateTime? @default(now())
+
+  @@map("support_message")
+}
+
+model ChatMessage {
+  id         Int       @id @default(autoincrement())
+  user_id    Int?
+  user       User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  session_id String    @db.VarChar(100)
+  role       String    @db.VarChar(20)
+  message    String    @db.Text
+  has_image  Boolean?  @default(false)
+  created_at DateTime? @default(now())
+
+  @@map("chat_message")
+}
+
+model Candidacy {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  user         User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  job_title    String    @default("Poste non défini") @db.VarChar(200)
+  company      String?   @default("") @db.VarChar(100)
+  filename     String?   @db.VarChar(200)
+  cv_score     Float?
+  source       String?   @default("manual") @db.VarChar(50)
+  status       String?   @default("pending") @db.VarChar(50)
+  is_submitted Boolean?  @default(false)
+  feedback     String?   @db.Text
+  created_at   DateTime? @default(now())
+  submitted_at DateTime?
+  resolved_at  DateTime?
+
+  @@map("candidacy")
+}
