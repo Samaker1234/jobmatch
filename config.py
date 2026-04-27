@@ -37,7 +37,16 @@ class Config:
     GEMINI_ENABLED = os.environ.get('GEMINI_ENABLED', '1') == '1'
     
     # Database (Fallback to SQLite if no Supabase URL provided)
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', os.environ.get('DATABASE_URL', 'sqlite:///jobmatch.db'))
+    _db_url = os.environ.get('SQLALCHEMY_DATABASE_URI', os.environ.get('DATABASE_URL', 'sqlite:///jobmatch.db'))
+    if _db_url and _db_url.startswith('postgresql'):
+        # SQLAlchemy requires 'postgresql://' instead of 'postgres://' (common in Heroku/Render)
+        if _db_url.startswith('postgres://'):
+            _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+        # Fix for pgbouncer error: remove ?pgbouncer=true if present
+        if '?' in _db_url:
+            _db_url = _db_url.split('?')[0]
+            
+    SQLALCHEMY_DATABASE_URI = _db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Flask-Mail Configuration

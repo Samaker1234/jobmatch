@@ -824,5 +824,39 @@
     .cv-toast.warning {
         background: rgba(245, 158, 11, 0.9);
     }
+    @media (max-width: 1024px) {
+        .pro-grid-main {
+            grid-template-columns: 1fr;
+        }
+        
+        .pro-metric-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .pro-bottom-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .metric-card-pro {
+            padding: 15px;
+        }
+        
+        .cv-modal {
+            padding: 20px;
+            width: 92%;
+        }
+
+        .cv-modal-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .cta-button {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
 </style>
 {% endblock %}
