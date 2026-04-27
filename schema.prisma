@@ -13,7 +13,7 @@ model User {
   firstname       String    @db.VarChar(50)
   lastname        String    @db.VarChar(50)
   email           String    @unique @db.VarChar(120)
-  password_hash   String?   @db.VarChar(128)
+  password_hash   String?   @db.VarChar(255)
   google_id       String?   @unique @db.VarChar(100)
   profession      String?   @db.VarChar(100)
   bio             String?   @db.Text
