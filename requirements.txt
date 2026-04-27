@@ -9,7 +9,7 @@ Flask-Mail==0.10.0
 PyPDF2==3.0.1
 reportlab==4.0.7
 
-# ML / NLP (versions avec wheels Python 3.10/3.11 précompilés)
+# ML / NLP (wheels précompilés disponibles pour Python 3.11)
 scikit-learn==1.4.2
 nltk==3.8.1
 numpy==1.26.4
@@ -28,5 +28,5 @@ Authlib==1.6.6
 # Production server
 gunicorn==21.2.0
 
-# Database driver PostgreSQL
+# Database driver PostgreSQL (Supabase)
 psycopg2-binary==2.9.9
